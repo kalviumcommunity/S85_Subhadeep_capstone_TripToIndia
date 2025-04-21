@@ -39,3 +39,9 @@ This platform is designed for both travel lovers and developers exploring MERN s
 
 
 
+Render link : https://s85-subhadeep-capstone-triptoindia-1.onrender.com/
+
+
+Root Directory	backend
+Build Command	npm install
+Start Command	nodemon server.js
