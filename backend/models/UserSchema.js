@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     minLength: [3, "First name must contain at least 3 characters!"],
     maxLength: [30, "First name cannot exceed 30 characters!"],
   },
-  lastName: {
+  lastname: {
     type: String,
     required: true,
     minLength: [3, "Last name must contain at least 3 characters!"],
@@ -23,8 +23,12 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    minLength: [10, "Phone number must contain only 10 digits!"],
-    maxLength: [10, "Phone number must contain only 10 digits!"],
+    validate: {
+      validator: function (v) {
+        return /^\d{10}$/.test(v);
+      },
+      message: "Phone number must be exactly 10 digits!",
+    },
   },
   password: {
     type: String,
@@ -35,4 +39,4 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-export default User
+export default User;
