@@ -6,8 +6,8 @@ const router = express.Router();
 // POST: Register new user
 router.post("/register", async (req, res) => {
   try {
-    const { firstname, lastName, email, phone, password } = req.body;
-    if (!firstname || !lastName || !email || !phone || !password) {
+    const { firstname, lastname, email, phone, password } = req.body;
+    if (!firstname || !lastname || !email || !phone || !password) {
       return res.status(400).json({ message: "All fields are required!" });
     }
     // Check if user already exists
