@@ -46,7 +46,7 @@ router.get('/user/:id', async (req, res) => {
   }
 });
 // ✅ Update User (PUT)
-router.put('/update/:id', async (req, res) => {
+router.put('/user/:id', async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
