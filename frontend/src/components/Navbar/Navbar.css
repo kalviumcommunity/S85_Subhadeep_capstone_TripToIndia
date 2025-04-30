@@ -24,7 +24,7 @@ ul{
 ul li{
     display: inline-block;
     margin: 10px 20px;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
 }
 .toggle-icon{
@@ -44,9 +44,7 @@ ul li{
     font-weight: 500;
 }
   
-.navbar li a:hover {
-    color: #007bff;            
-} 
+
   
 .dark .navbar li a {
     color: white;
