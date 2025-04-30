@@ -1,10 +1,32 @@
-import React from 'react'
-const App = () => {
-  return (
-    <div className='container'>
-     <h1>Hi Welcome to my page 🖼️</h1>
-    </div>
-  )
-}
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-export default App
+import Navbar from './components/Navbar/Navbar.jsx';
+
+// Your pages (make sure these exist)
+import Home from './pages/Home.jsx';
+import About from './pages/About.jsx';
+import TopPlaces from './pages/TopPlaces.jsx';
+import Login from './pages/Login.jsx';
+
+const App = () => {
+  const [theme, settheme] = useState('light');
+
+  return (
+    <Router>
+      <div className={`container ${theme}`}>
+        <Navbar theme={theme} settheme={settheme} />
+
+        {/* Routes for different pages */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/top-places" element={<TopPlaces />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;

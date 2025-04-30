@@ -8,8 +8,8 @@
   width: 100vw;
   min-height: 100vh;
   background:  #ced8ff;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: 0.5s;
+}
+.container.dark{
+background: #222;
 }
