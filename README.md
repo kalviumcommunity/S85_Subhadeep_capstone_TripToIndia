@@ -45,3 +45,15 @@ Render link : https://s85-subhadeep-capstone-triptoindia-1.onrender.com/
 Root Directory	backend
 Build Command	npm install
 Start Command	nodemon server.js
+
+
+## 🌐 Live Frontend Deployment
+
+The frontend is deployed on **Netlify**:  
+👉 [https://triptoindia.netlify.app/]
+
+For deploying the frontend on Netlify, here are the correct settings:
+
+- **Base Directory**: `frontend`
+- **Build Command**: `npm run build`
+- **Publish Directory**: `dist`
