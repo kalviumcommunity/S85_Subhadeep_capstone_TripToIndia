@@ -7,7 +7,6 @@ import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
 import TopPlaces from './pages/TopPlaces.jsx';
 import Login from './pages/Login.jsx';
-
 const App = () => {
   const [theme, settheme] = useState('light');
 
