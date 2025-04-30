@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar.jsx';
 
-// Your pages (make sure these exist)
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
 import TopPlaces from './pages/TopPlaces.jsx';
@@ -17,7 +16,6 @@ const App = () => {
       <div className={`container ${theme}`}>
         <Navbar theme={theme} settheme={settheme} />
 
-        {/* Routes for different pages */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

@@ -1,4 +1,3 @@
-// ✅ Correct - default export
 import React from 'react';
 
 const About = () => {
