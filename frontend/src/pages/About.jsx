@@ -10,7 +10,7 @@ const navigate = useNavigate();
   return (
     <div
       className={`w-screen min-h-screen py-10 transition-all duration-500 ${
-        isDark ? "bg-[#ced8ff] text-black" : "bg-[black] text-white"
+        isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -57,7 +57,7 @@ const navigate = useNavigate();
             <div className="space-y-4">
               <p
                 className={`text-base leading-relaxed ${
-                  isDark ? "text-gray-700" : "text-gray-300"
+                  isDark ? "text-gray-300" : "text-gray-700"
                 }`}
               >
                 Explore the majestic beauty, cultural richness, and hidden gems of India with us.
@@ -66,7 +66,7 @@ const navigate = useNavigate();
               </p>
               <p
                 className={`text-base leading-relaxed ${
-                  isDark ? "text-gray-700" : "text-gray-300"
+                  isDark ? "text-gray-300" : "text-gray-700"
                 }`}
               >
                 Our platform offers trusted guides, curated experiences, and 24/7 support to make
