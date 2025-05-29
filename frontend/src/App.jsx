@@ -12,15 +12,18 @@ const App = () => {
 
   return (
     <Router>
+      <div className={`w-screen min-h-screen transition-all duration-500 ${theme === 'dark' ? 'bg-[#222] text-white' : 'bg-[#ced8ff] text-black'}`}>
+
       <div className={`container ${theme}`}>
-        <Navbar theme={theme} settheme={settheme} />
+        <Navbar theme={theme} setTheme={settheme} />
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<About theme={theme}/>} />
           <Route path="/top-places" element={<TopPlaces />} />
           <Route path="/login" element={<Login />} />
         </Routes>
+      </div>
       </div>
     </Router>
   );
