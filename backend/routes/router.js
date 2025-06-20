@@ -24,6 +24,35 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// POST: Login user
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required!" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user || user.password !== password) {
+      return res.status(401).json({ success: false, message: "Invalid email or password!" });
+    }
+
+    // If login is successful
+    res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      user: {
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phone: user.phone,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 // ✅ Read All Users (GET)
 router.get('/users', async (req, res) => {

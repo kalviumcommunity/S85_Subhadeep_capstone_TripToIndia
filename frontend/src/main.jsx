@@ -3,10 +3,20 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+import { BrowserRouter } from "react-router-dom";
+
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from './redux/store'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <div className="w-full h-full">
-      <App />
-    </div>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <div className="w-full h-full">
+         <App />
+        </div>
+      </PersistGate>
+    </Provider>
   </StrictMode>
 )
