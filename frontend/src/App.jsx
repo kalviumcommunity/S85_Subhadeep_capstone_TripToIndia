@@ -7,6 +7,7 @@ import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
 import TopPlaces from './pages/TopPlaces.jsx';
 import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 const App = () => {
   const [theme, settheme] = useState('light');
 
@@ -21,7 +22,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About theme={theme}/>} />
           <Route path="/top-places" element={<TopPlaces />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login theme={theme}/>} />
+          <Route path="/signup" element={<Signup theme={theme}/>} />
         </Routes>
       </div>
       </div>
