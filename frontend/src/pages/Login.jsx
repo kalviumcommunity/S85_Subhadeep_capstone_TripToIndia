@@ -61,7 +61,7 @@ const Login = ({ theme }) => {
     navigate("/");
 
   } catch (error) {
-    dispatch(loginFailure("fgh",error.message));
+    dispatch(loginFailure("504 Error",error.message));
     console.error("Login error:", error.message);
   }
 };

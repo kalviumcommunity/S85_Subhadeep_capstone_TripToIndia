@@ -1,22 +1,36 @@
 import express from "express";
 import User from "../models/UserSchema.js";
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
 // POST: Register new user
 router.post("/register", async (req, res) => {
   try {
-    const { firstname, lastname, email, phone, password } = req.body;
-    if (!firstname || !lastname || !email || !phone || !password) {
+    const { firstname, lastname, email, phone, password, role } = req.body;
+    if (!firstname || !lastname || !email || !phone || !password || !role) {
       return res.status(400).json({ message: "All fields are required!" });
     }
-    // Check if user already exists
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ message: "User already exists with this email!" });
     }
-    // Save new user
-    const newUser = new User(req.body);
+
+    // 🔐 Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Save new user with hashed password
+    const newUser = new User({
+      firstname,
+      lastname,
+      email,
+      phone,
+      password: hashedPassword,
+      role,
+    });
+
     await newUser.save();
     res.status(201).json({ message: "User created successfully!", newUser });
   } catch (error) {
@@ -33,11 +47,17 @@ router.post("/login", async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user || user.password !== password) {
+    if (!user) {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
     }
 
-    // If login is successful
+    // 🔐 Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid email or password!" });
+    }
+
+    // Success
     res.status(200).json({
       success: true,
       message: "Login successful!",
@@ -47,6 +67,7 @@ router.post("/login", async (req, res) => {
         lastname: user.lastname,
         email: user.email,
         phone: user.phone,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -54,47 +75,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ✅ Read All Users (GET)
-router.get('/users', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ✅ Read Single User (GET)
-router.get('/user/:id', async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-// ✅ Update User (PUT)
-router.put('/user/:id', async (req, res) => {
-  try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json({ message: 'User updated', user: updatedUser });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-//Delete User (DELETE)
-router.delete("/user/:id",async(req,res)=>{
-  try {
-    const deleteUser = await User.findByIdAndDelete(req.params.id);
-    if(!deleteUser)return res.status(404).json({message:"User not found"});
-    res.status(200).json({ message: 'User deleted successfully', user: deleteUser });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-})
-
-export default router;
+export default router

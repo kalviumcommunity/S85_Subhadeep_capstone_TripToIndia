@@ -10,6 +10,7 @@ const Signup = ({ theme }) => {
     email: "",
     phone: "",
     password: "",
+    role:"customer"
   });
 
   const handleChange = (e) => {
