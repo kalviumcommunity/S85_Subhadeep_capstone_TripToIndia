@@ -8,6 +8,9 @@ import About from './pages/About.jsx';
 import TopPlaces from './pages/TopPlaces.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import Profile from './pages/Profile.jsx';
+import Add_info from './pages/Add_info.jsx';
+import PlaceDetails from './pages/PlaceDetails.jsx';
 const App = () => {
   const [theme, settheme] = useState('light');
 
@@ -19,11 +22,15 @@ const App = () => {
         <Navbar theme={theme} setTheme={settheme} />
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home theme={theme}/>} />
           <Route path="/about" element={<About theme={theme}/>} />
           <Route path="/top-places" element={<TopPlaces />} />
           <Route path="/login" element={<Login theme={theme}/>} />
           <Route path="/signup" element={<Signup theme={theme}/>} />
+          <Route path="/profile" element={<Profile theme={theme} />} />
+          <Route path="/add-info" element={<Add_info theme={theme} />}/>
+          <Route path="/place/:id" element={<PlaceDetails theme={theme} />} />
+
         </Routes>
       </div>
       </div>

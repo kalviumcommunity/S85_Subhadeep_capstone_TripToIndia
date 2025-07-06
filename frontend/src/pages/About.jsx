@@ -1,4 +1,5 @@
 import React from "react";
+import pic from "../assets/images/IMG_20250619_171659.jpg"
 import { useNavigate } from "react-router-dom"; 
 const About = ({ theme }) => {
   const isDark = theme === "dark";
@@ -28,7 +29,7 @@ const navigate = useNavigate();
                 </div>
                 <div className="overflow-hidden rounded-3xl shadow-xl">
                   <img
-                    src="https://images.unsplash.com/photo-1544750040-4ea9b8a27d38?auto=format&fit=crop&w=600&q=80"
+                    src={pic}
                     alt="Adventure"
                     className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
                   />
@@ -48,8 +49,8 @@ const navigate = useNavigate();
 
           {/* Text Section */}
           <div className="w-full lg:w-1/2 lg:pl-8">
-            <span className="text-[#41A4FF] text-lg font-semibold uppercase tracking-wide mb-3 block">
-              Discover India
+            <span className="italic text-3xl  font-thin mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-white to-green-500 tracking-normal">
+              𝐃𝐢𝐬𝐜𝐨𝐯𝐞𝐫 𝐈𝐧𝐝𝐢𝐚
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 leading-tight">
               Why TripToIndia is Your Ideal Travel Companion
