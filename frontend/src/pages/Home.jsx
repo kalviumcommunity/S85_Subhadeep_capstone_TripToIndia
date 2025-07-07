@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 
-
 const BASE_URL =
   import.meta.env.MODE === "development"
     ? "/api"
