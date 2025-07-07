@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", router);         // User routes
-app.use("/add", placeRouter);    // Place routes
+app.use("/api/add", placeRouter);    // Place routes
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
