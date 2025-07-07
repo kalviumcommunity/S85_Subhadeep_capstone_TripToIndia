@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const BASE_URL =
+  import.meta.env.MODE === "development"
+    ? "/api"
+    : "https://triptoindia.onrender.com/api";
+
+
 const Signup = ({ theme }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -34,12 +40,7 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const BASE_URL =
-  import.meta.env.MODE === 'development'
-    ? '/api'
-    : 'https://triptoindia.onrender.com/api';
-
-const res = await axios.post(`${BASE_URL}/register`, formData);
+    const res = await axios.post(`${BASE_URL}/register`, formData);
 
     const { success, message } = res.data;
 

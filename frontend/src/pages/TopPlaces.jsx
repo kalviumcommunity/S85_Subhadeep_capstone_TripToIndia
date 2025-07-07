@@ -32,7 +32,7 @@ const TopPlaces = ({ theme }) => {
             className={`cursor-pointer rounded-lg border shadow-lg p-4 hover:shadow-xl transition ${isDark ? "bg-[#222] text-white" : "bg-[white] text-black"}`}
           >
             <img
-              src={`https://triptoindia.onrender.com/add/image/${place._id}`}
+              src={`https://triptoindia.onrender.com/api/add/image/${place._id}`}
               alt={place.name}
               className="w-full h-48 object-cover rounded-md mb-4"
             />

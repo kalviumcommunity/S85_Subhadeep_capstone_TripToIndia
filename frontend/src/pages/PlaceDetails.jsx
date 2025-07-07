@@ -17,7 +17,7 @@ const navigate = useNavigate();
   useEffect(() => {
     const fetchPlace = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/add/place/${id}`);
+        const res = await axios.get(`https://triptoindia.onrender.com/api/add/place/${id}`);
         setPlace(res.data);
       } catch (err) {
         console.error("Failed to fetch place", err);
@@ -48,7 +48,7 @@ const navigate = useNavigate();
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">{place.name}</h1>
           <img
-            src={`https://triptoindia.onrender.com/add/image/${place._id}`}
+            src={`https://triptoindia.onrender.com/api/add/image/${place._id}`}
             alt={place.name}
             className="rounded-lg mb-6 shadow-lg border object-cover w-full max-h-[400px]"
           />
