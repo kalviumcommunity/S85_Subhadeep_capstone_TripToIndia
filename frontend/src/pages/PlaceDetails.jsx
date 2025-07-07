@@ -48,7 +48,7 @@ const navigate = useNavigate();
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">{place.name}</h1>
           <img
-            src={`http://localhost:3000/add/image/${place._id}`}
+            src={`https://triptoindia.onrender.com/add/image/${place._id}`}
             alt={place.name}
             className="rounded-lg mb-6 shadow-lg border object-cover w-full max-h-[400px]"
           />
