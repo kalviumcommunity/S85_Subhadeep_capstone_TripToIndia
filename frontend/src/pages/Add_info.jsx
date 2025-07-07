@@ -37,7 +37,7 @@ const Add_info = ({ theme }) => {
         data.append(key, value);
       });
 
-      await axios.post("api/add/register", data);
+      await axios.post("https://triptoindia.onrender.com/api/add/register", data);
       setMessage("✅ Place added successfully!");
       setFormData({ name: "", description: "", address: "", image: null });
       if (imageInputRef.current) imageInputRef.current.value = "";
