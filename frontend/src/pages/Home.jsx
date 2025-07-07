@@ -10,6 +10,12 @@ import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+
+const BASE_URL =
+  import.meta.env.MODE === "development"
+    ? "/api"
+    : "https://triptoindia.onrender.com/api";
+
 const Home = ({ theme }) => {
   const isDark = theme === "dark";
   const user = useSelector((state) => state.user.currentUser);
@@ -26,9 +32,8 @@ const Home = ({ theme }) => {
         return;
       }
       try {
-        const res = await axios.get(
-          `https://triptoindia.onrender.com/add/search?q=${searchTerm}`
-        );
+       const res = await axios.get(`${BASE_URL}/add/search?q=${searchTerm}`);
+
         setSearchResults(res.data);
       } catch (error) {
         console.error("Search failed", error);

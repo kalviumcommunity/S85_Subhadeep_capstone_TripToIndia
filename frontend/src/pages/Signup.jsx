@@ -34,7 +34,13 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const res = await axios.post("/api/register", formData);
+    const BASE_URL =
+  import.meta.env.MODE === 'development'
+    ? '/api'
+    : 'https://triptoindia.onrender.com/api';
+
+const res = await axios.post(`${BASE_URL}/register`, formData);
+
     const { success, message } = res.data;
 
     alert(message);

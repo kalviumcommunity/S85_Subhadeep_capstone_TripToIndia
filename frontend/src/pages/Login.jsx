@@ -29,7 +29,12 @@ const Login = ({ theme }) => {
   try {
     dispatch(loginStart());
 
-    const res = await fetch(`/api/login`, {
+    const BASE_URL =
+      import.meta.env.MODE === 'development'
+        ? '/api'
+        : 'https://triptoindia.onrender.com/api';
+
+    const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,10 +42,8 @@ const Login = ({ theme }) => {
       body: JSON.stringify(formData),
     });
 
-    // First check if response has content
     const contentLength = res.headers.get('Content-Length');
     if (contentLength === '0' || !res.ok) {
-      // If no content or not OK status, throw error with status text
       throw new Error(res.statusText || 'Login failed');
     }
 
@@ -48,7 +51,6 @@ const Login = ({ theme }) => {
     try {
       data = await res.json();
     } catch (jsonError) {
-      // If JSON parsing fails, throw error with status text
       throw new Error(res.statusText || 'Invalid server response');
     }
 
@@ -61,10 +63,11 @@ const Login = ({ theme }) => {
     navigate("/");
 
   } catch (error) {
-    dispatch(loginFailure("504 Error",error.message));
+    dispatch(loginFailure("504 Error", error.message));
     console.error("Login error:", error.message);
   }
 };
+
 
 
   const isDark = theme === "dark";
