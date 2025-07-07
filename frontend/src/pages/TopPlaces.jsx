@@ -59,7 +59,7 @@ const TopPlaces = ({ theme }) => {
   <div className="mt-6 text-center">
     <span className="text-sm text-gray-500">
       ✈️ Plan. Explore. Share. — Only with  
-      <a href="/top-places" className="hover:text-pink-500 font-medium text-blue-600 transition">
+      <a href="/" className="hover:text-pink-500 font-medium text-blue-600 transition">
                 <span> TripToIndia</span>
               
               </a>
