@@ -27,7 +27,7 @@ const Home = ({ theme }) => {
       }
       try {
         const res = await axios.get(
-          `http://localhost:3000/add/search?q=${searchTerm}`
+          `https://triptoindia.onrender.com/add/search?q=${searchTerm}`
         );
         setSearchResults(res.data);
       } catch (error) {
