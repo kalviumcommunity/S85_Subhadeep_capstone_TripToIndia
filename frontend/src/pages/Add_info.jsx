@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -8,11 +8,10 @@ const Add_info = ({ theme }) => {
     name: "",
     description: "",
     address: "",
-    image: null,
+    imageUrl: "",
   });
 
   const [message, setMessage] = useState("");
-  const imageInputRef = useRef(null);
   const navigate = useNavigate();
   const isDark = theme === "dark";
 
@@ -21,28 +20,21 @@ const Add_info = ({ theme }) => {
   };
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
-      });
-
-      await axios.post("https://triptoindia.onrender.com/api/add/register", data);
+      await axios.post(
+        "https://triptoindia.onrender.com/api/add/register",
+        formData
+      );
       setMessage("✅ Place added successfully!");
-      setFormData({ name: "", description: "", address: "", image: null });
-      if (imageInputRef.current) imageInputRef.current.value = "";
+      setFormData({ name: "", description: "", address: "", imageUrl: "" });
 
-      setTimeout(() => navigate("/"), 1500); // redirect after 1.5 sec
+      setTimeout(() => navigate("/"), 1500);
     } catch (err) {
       console.error(err);
       setMessage("❌ Error adding place");
@@ -129,18 +121,20 @@ const Add_info = ({ theme }) => {
             />
           </div>
 
-          {/* Image */}
+          {/* Image URL */}
           <div>
-            <label className="text-sm font-medium">Upload Image</label>
+            <label className="text-sm font-medium">Image URL</label>
             <input
-              ref={imageInputRef}
-              type="file"
-              name="image"
-              accept="image/*"
+              type="text"
+              name="imageUrl"
+              value={formData.imageUrl}
               onChange={handleChange}
               required
-              className={`mt-1 w-full ${
-                isDark ? "text-gray-200" : "text-black"
+              placeholder="Paste direct image URL (e.g., from Postimages)"
+              className={`mt-1 w-full px-4 py-2 rounded-lg border focus:ring-2 focus:outline-none transition ${
+                isDark
+                  ? "bg-[#2a2a2a] border-gray-600 text-white focus:ring-pink-500"
+                  : "bg-white border-gray-300 text-black focus:ring-pink-500"
               }`}
             />
           </div>

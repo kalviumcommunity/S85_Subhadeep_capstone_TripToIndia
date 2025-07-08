@@ -1,43 +1,27 @@
 import express from "express";
-import multer from "multer";
 import Doc from "../models/PlaceSchema.js";
 
-const upload = multer({ storage: multer.memoryStorage() }); // use memory storage
 const placeRouter = express.Router();
-
 // POST: Upload place with image
-placeRouter.post("/register", upload.single("image"), async (req, res) => {
+placeRouter.post("/register", async (req, res) => {
   try {
-    const { name, description, address } = req.body;
+    const { name, description, address, imageUrl } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Image file is required." });
-    }
+if (!imageUrl) {
+  return res.status(400).json({ message: "Image URL is required." });
+}
 
-    const newPlace = new Doc({
-      name,
-      description,
-      address,
-      image: {
-        data: req.file.buffer,
-        contentType: req.file.mimetype,
-      },
-    });
+const newPlace = new Doc({
+  name,
+  description,
+  address,
+  imageUrl,
+});
 
     await newPlace.save();
     res.status(201).json({ message: "Place registered", place: newPlace });
   } catch (error) {
     res.status(500).json({ message: "Error registering place", error });
-  }
-});
-
-// GET: All places (excluding image to reduce size)
-placeRouter.get("/places", async (req, res) => {
-  try {
-    const places = await Doc.find({}, { image: 0 }); // exclude image from list
-    res.status(200).json(places);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching places", error });
   }
 });
 
@@ -52,28 +36,6 @@ placeRouter.get("/places/:id", async (req, res) => {
   }
 });
 
-placeRouter.get('/place/:id', async (req, res) => {
-  try {
-    const place = await Doc.findById(req.params.id);
-    res.json(place);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch place" });
-  }
-});
-// GET: Image by place ID
-placeRouter.get("/image/:id", async (req, res) => {
-  try {
-    const place = await Doc.findById(req.params.id);
-    if (!place || !place.image || !place.image.data) {
-      return res.status(404).send("Image not found");
-    }
-
-    res.set("Content-Type", place.image.contentType);
-    res.send(place.image.data);
-  } catch (error) {
-    res.status(500).send("Server error");
-  }
-});
 
 placeRouter.get("/search", async (req, res) => {
   try {
