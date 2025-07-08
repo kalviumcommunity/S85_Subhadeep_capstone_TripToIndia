@@ -1,23 +1,25 @@
 // src/pages/PlaceDetails.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 
 const PlaceDetails = ({ theme }) => {
-    const { id } = useParams();
-    const [place, setPlace] = useState(null);
-    const isDark = theme === "dark";
-    
-const navigate = useNavigate();
+  const { id } = useParams();
+  const [place, setPlace] = useState(null);
+  const isDark = theme === "dark";
+  const navigate = useNavigate();
+
   const handleClose = () => {
     navigate("/");
   };
+
   useEffect(() => {
     const fetchPlace = async () => {
       try {
-        const res = await axios.get(`https://triptoindia.onrender.com/api/add/place/${id}`);
+        const res = await axios.get(
+          `https://triptoindia-97vr.onrender.com/api/add/places/${id}`
+        );
         setPlace(res.data);
       } catch (err) {
         console.error("Failed to fetch place", err);
@@ -39,16 +41,17 @@ const navigate = useNavigate();
           isDark ? "bg-[#2b2b2b] border-gray-700" : "bg-white border-gray-300"
         } transition-all duration-300 hover:shadow-blue-200`}
       >
-       <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
-              >
-                <IoClose />
-              </button>
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
+        >
+          <IoClose />
+        </button>
+
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">{place.name}</h1>
           <img
-            src={`https://triptoindia.onrender.com/api/add/image/${place._id}`}
+            src={place.imageUrl}
             alt={place.name}
             className="rounded-lg mb-6 shadow-lg border object-cover w-full max-h-[400px]"
           />

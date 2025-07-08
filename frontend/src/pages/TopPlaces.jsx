@@ -10,7 +10,7 @@ const TopPlaces = ({ theme }) => {
   useEffect(() => {
     const fetchRandomPlaces = async () => {
       try {
-        const res = await axios.get("https://triptoindia.onrender.com/api/add/random");
+        const res = await axios.get("https://triptoindia-97vr.onrender.com/api/add/random");
         setPlaces(res.data);
       } catch (err) {
         console.error("Error fetching random places", err);
@@ -30,7 +30,7 @@ const TopPlaces = ({ theme }) => {
             className={`cursor-pointer rounded-lg border shadow-lg p-4 hover:shadow-xl transition ${isDark ? "bg-[#222] text-white" : "bg-[white] text-black"} hover:shadow-blue-200`}
           >
             <img
-              src={`https://triptoindia.onrender.com/api/add/image/${place._id}`}
+              src={place.imageUrl}
               alt={place.name}
               className="w-full h-48 object-cover rounded-md mb-4"
             />

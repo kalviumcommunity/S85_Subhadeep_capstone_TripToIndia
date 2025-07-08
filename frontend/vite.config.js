@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://triptoindia.onrender.com',
+        target: 'https://triptoindia-97vr.onrender.com',
         changeOrigin: true,
       },
     },
