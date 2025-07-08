@@ -62,7 +62,7 @@ const Home = ({ theme }) => {
               }`}
             />
 
-            {searchResults.length > 0 && (
+            {searchTerm.trim() !== "" && searchResults.length > 0 && (
               <ul
                 className={`absolute left-0 right-0 top-full mt-2 z-50 max-h-60 overflow-y-auto rounded-md border shadow-lg ${
                   isDark
