@@ -24,7 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home theme={theme}/>} />
           <Route path="/about" element={<About theme={theme}/>} />
-          <Route path="/top-places" element={<TopPlaces />} />
+          <Route path="/top-places" element={<TopPlaces theme={theme}/>} />
           <Route path="/login" element={<Login theme={theme}/>} />
           <Route path="/signup" element={<Signup theme={theme}/>} />
           <Route path="/profile" element={<Profile theme={theme} />} />
