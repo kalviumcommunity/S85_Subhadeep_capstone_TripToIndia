@@ -7,16 +7,28 @@ placeRouter.post("/register", async (req, res) => {
   try {
     const { name, description, address, imageUrl } = req.body;
 
-if (!imageUrl) {
-  return res.status(400).json({ message: "Image URL is required." });
-}
+    if (!imageUrl || !name || !description || !address) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
 
-const newPlace = new Doc({
-  name,
-  description,
-  address,
-  imageUrl,
-});
+    // ✅ Check for existing place with same name, address, and imageUrl
+    const existingPlace = await Doc.findOne({
+      name: name.trim(),
+      address: address.trim(),
+      imageUrl: imageUrl.trim(),
+    });
+
+    if (existingPlace) {
+      return res.status(409).json({ message: "Place already exists." });
+    }
+
+    // ✅ Create and save new place
+    const newPlace = new Doc({
+      name: name.trim(),
+      description: description.trim(),
+      address: address.trim(),
+      imageUrl: imageUrl.trim(),
+    });
 
     await newPlace.save();
     res.status(201).json({ message: "Place registered", place: newPlace });
@@ -24,6 +36,7 @@ const newPlace = new Doc({
     res.status(500).json({ message: "Error registering place", error });
   }
 });
+
 
 // GET: Individual place info
 placeRouter.get("/places/:id", async (req, res) => {
@@ -39,7 +52,13 @@ placeRouter.get("/places/:id", async (req, res) => {
 
 placeRouter.get("/search", async (req, res) => {
   try {
-    const query = req.query.q;
+    const query = req.query.q?.trim();
+
+    // Don't search if query is empty
+    if (!query) {
+      return res.status(200).json([]); // Return empty array
+    }
+
     const results = await Doc.find({
       $or: [
         { name: { $regex: query, $options: "i" } },
@@ -47,6 +66,7 @@ placeRouter.get("/search", async (req, res) => {
         { address: { $regex: query, $options: "i" } },
       ],
     });
+
     res.status(200).json(results);
   } catch (error) {
     res.status(500).json({ message: "Search failed", error });

@@ -32,7 +32,7 @@ const Login = ({ theme }) => {
     const BASE_URL =
       import.meta.env.MODE === 'development'
         ? '/api'
-        : 'https://triptoindia.onrender.com/api';
+        : 'https://triptoindia-97vr.onrender.com/api';
 
     const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",

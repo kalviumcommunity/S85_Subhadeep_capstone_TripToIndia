@@ -28,7 +28,7 @@ const Add_info = ({ theme }) => {
     e.preventDefault();
     try {
       await axios.post(
-        "https://triptoindia.onrender.com/api/add/register",
+        "https://triptoindia-97vr.onrender.com/api/add/register",
         formData
       );
       setMessage("✅ Place added successfully!");
