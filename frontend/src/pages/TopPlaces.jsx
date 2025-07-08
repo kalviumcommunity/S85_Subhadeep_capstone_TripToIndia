@@ -1,4 +1,3 @@
-// src/pages/TopPlaces.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -21,15 +20,14 @@ const TopPlaces = ({ theme }) => {
   }, []);
 
   return (
-    <div className={`min-h-screen ml-20 px-6 py-10 ${isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"}`}>
+    <div className={`min-h-screen ml-20 px-6 py-10}`}>
       <h1 className="text-3xl font-bold mb-8">Top Places →</h1>
-
-      <div className={`grid grid-cols-1 ml-20 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}>
+      <div className={`grid grid-cols-1 ml-16 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}>
         {places.map((place) => (
           <div
             key={place._id}
             onClick={() => navigate(`/place/${place._id}`)}
-            className={`cursor-pointer rounded-lg border shadow-lg p-4 hover:shadow-xl transition ${isDark ? "bg-[#222] text-white" : "bg-[white] text-black"}`}
+            className={`cursor-pointer rounded-lg border shadow-lg p-4 hover:shadow-xl transition ${isDark ? "bg-[#222] text-white" : "bg-[white] text-black"} hover:shadow-blue-200`}
           >
             <img
               src={`https://triptoindia.onrender.com/api/add/image/${place._id}`}
@@ -42,7 +40,7 @@ const TopPlaces = ({ theme }) => {
       </div>
       {/* About TripToIndia Section */}
 <div
-  className={`mt-8 px-6 ml-20  py-10 rounded-2xl shadow-inner transition-all duration-500 ${
+  className={`mt-8 px-6 ml-16  py-10 rounded-2xl shadow-inner transition-all duration-500 ${
     isDark ? "bg-[#111] text-gray-300" : "bg-white text-gray-800"
   }`}
 >
