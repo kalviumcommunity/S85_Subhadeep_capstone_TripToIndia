@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const Doc = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String,unique: true, required: true },
   description: { type: String, required: true },
   address: { type: String, required: true },
   image: {
