@@ -25,7 +25,7 @@ const PlaceDetails = ({ theme }) => {
     const fetchPlace = async () => {
       try {
         const res = await axios.get(
-          `https://triptoindia-97vr.onrender.com/api/add/places/${id}`
+          `https://triptoindia-18.onrender.com/api/add/places/${id}`
         );
         setPlace(res.data);
       } catch (err) {
@@ -60,7 +60,7 @@ const PlaceDetails = ({ theme }) => {
           // Use backend to convert address to lat/lng
           try {
             const geoRes = await fetch(
-              `https://triptoindia-97vr.onrender.com/api/geocode?address=${encodeURIComponent(place.address)}`
+              `https://triptoindia-18.onrender.com/api/geocode?address=${encodeURIComponent(place.address)}`
             );
             const geoData = await geoRes.json();
             const location = geoData.results[0]?.geometry?.location;

@@ -5,7 +5,7 @@ import axios from "axios";
 const BASE_URL =
   import.meta.env.MODE === "development"
     ? "/api"
-    : "https://triptoindia-97vr.onrender.com/api";
+    : "https://triptoindia-18.onrender.com/api";
 
 
 const Signup = ({ theme }) => {
