@@ -27,7 +27,7 @@ const Home = ({ theme }) => {
       }
       try {
         const res = await axios.get(
-          `https://triptoindia-97vr.onrender.com/api/add/search?q=${searchTerm}`
+          `https://triptoindia-18.onrender.com/api/add/search?q=${searchTerm}`
         );
         setSearchResults(res.data);
       } catch (error) {
