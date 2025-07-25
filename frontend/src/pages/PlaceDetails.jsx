@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
-import {
-  GoogleMap,
-  LoadScript,
-  DirectionsRenderer,
-} from "@react-google-maps/api";
+import { GoogleMap, DirectionsRenderer } from "@react-google-maps/api";
 
 const PlaceDetails = ({ theme }) => {
   const { id } = useParams();
@@ -36,73 +32,93 @@ const PlaceDetails = ({ theme }) => {
   }, [id]);
 
   const handleGetDirections = async () => {
-    console.log("Trying to geocode this address:", place.address);
-
-    if (!place) return;
+    if (!place || !window.google || !window.google.maps) return;
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const origin = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        setCurrentLocation(origin);
-
-        let destination = null;
-
-        // Use stored lat/lng if available
-        if (place.latitude && place.longitude) {
-          destination = {
-            lat: place.latitude,
-            lng: place.longitude,
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const origin = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
           };
-        } else {
-          // Use backend to convert address to lat/lng
-          try {
-            const geoRes = await fetch(
-              `https://triptoindia-18.onrender.com/api/geocode?address=${encodeURIComponent(place.address)}`
-            );
-            const geoData = await geoRes.json();
-            const location = geoData.results[0]?.geometry?.location;
+          setCurrentLocation(origin);
 
-            if (!location) {
-              alert(
-                `Could not find coordinates for this address:\n${place.address}`
+          let destination = null;
+
+          // Use stored lat/lng if available
+          if (place.latitude && place.longitude) {
+            destination = {
+              lat: place.latitude,
+              lng: place.longitude,
+            };
+          } else {
+            // Use Geocoding API to convert address to lat/lng
+            try {
+              const geoRes = await fetch(
+                `https://triptoindia-18.onrender.com/api/geocode?address=${encodeURIComponent(
+                  place.address
+                )}`
               );
-              console.log("Geocode full response:", geoData);
+              const geoData = await geoRes.json();
+              const location = geoData.results[0]?.geometry?.location;
+
+              console.log("Geocoded destination location:", location);
+
+              if (!location) {
+                alert(
+                  `Could not find coordinates for this address:\n${place.address}`
+                );
+                console.log("Geocode full response:", geoData);
+                return;
+              }
+
+              destination = {
+                lat: location.lat,
+                lng: location.lng,
+              };
+            } catch (err) {
+              console.error("Geocoding failed", err);
               return;
             }
-
-            destination = {
-              lat: location.lat,
-              lng: location.lng,
-            };
-          } catch (err) {
-            console.error("Geocoding failed", err);
-            return;
           }
+
+          calculateDirections(origin, destination);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          alert(
+            "Could not get your current location. Please ensure location services are enabled."
+          );
         }
-
-        const directionsService = new window.google.maps.DirectionsService();
-        directionsService.route(
-          {
-            origin,
-            destination,
-            travelMode: window.google.maps.TravelMode.DRIVING,
-          },
-          (result, status) => {
-            if (status === "OK") {
-              setDirections(result);
-              setShowRoute(true);
-            } else {
-              console.error("Error fetching directions", result);
-            }
-          }
-        );
-      });
+      );
     } else {
       alert("Geolocation is not supported by your browser.");
     }
+  };
+
+  const calculateDirections = (origin, destination) => {
+    const directionsService = new window.google.maps.DirectionsService();
+    directionsService.route(
+      {
+        origin,
+        destination,
+        travelMode: window.google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        console.log("Origin:", origin);
+        console.log("Destination:", destination);
+        console.log("Directions status:", status);
+        console.log("Directions result:", result);
+
+        if (status === "OK") {
+          setDirections(result);
+          setShowRoute(true);
+        } else {
+          console.error("Error fetching directions", result);
+          alert("Could not calculate directions. Please try again or use actual Map by this location name.");
+        }
+      }
+    );
   };
 
   if (!place) return <p className="text-center mt-10">Loading...</p>;
@@ -113,22 +129,23 @@ const PlaceDetails = ({ theme }) => {
         isDark ? "bg-[#1a1a1a] text-white" : "bg-[#ced8ff] text-black"
       }`}
     >
-      <div
-        className={`relative max-w-3xl w-full rounded-2xl shadow-2xl p-8 border flex flex-col justify-between ${
-          isDark ? "bg-[#2b2b2b] border-gray-700" : "bg-white border-gray-300"
-        } transition-all duration-300 hover:shadow-blue-200`}
-      >
-        <button
-          onClick={handleClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
+      {!showRoute && (
+        <div
+          className={`relative max-w-3xl w-full rounded-2xl shadow-2xl p-8 border flex flex-col justify-between ${
+            isDark ? "bg-[#2b2b2b] border-gray-700" : "bg-white border-gray-300"
+          } transition-all duration-300 hover:shadow-blue-200`}
         >
-          <IoClose />
-        </button>
+          <button
+            onClick={handleClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"
+          >
+            <IoClose />
+          </button>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-4xl font-bold flex items-center">
-              {place.name}
+          <div className="max-w-3xl mx-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-4xl font-bold flex items-center">
+                {place.name}
               </h1>
               <button
                 onClick={handleGetDirections}
@@ -136,30 +153,28 @@ const PlaceDetails = ({ theme }) => {
               >
                 Go There →
               </button>
-          </div>
+            </div>
 
-          <img
-            src={place.imageUrl}
-            alt={place.name}
-            className="rounded-lg mb-6 shadow-lg border object-cover w-full max-h-[400px]"
-          />
-          <p className="text-lg">{place.description}</p>
-          <p className="mt-4 text-sm text-gray-500">{place.address}</p>
+            <img
+              src={place.imageUrl}
+              alt={place.name}
+              className="rounded-lg mb-6 shadow-lg border object-cover w-full max-h-[400px]"
+            />
+            <p className="text-lg">{place.description}</p>
+            <p className="mt-4 text-sm text-gray-500">{place.address}</p>
+          </div>
         </div>
-      </div>
+      )}
 
       {showRoute && currentLocation && (
         <div className="mt-10 w-full max-w-3xl h-[400px]">
-          {/* AIzaSyAspvBEpSIx8eVrQfOjGubuXRGjroBPuOI */}
-          <LoadScript googleMapsApiKey="AIzaSyAspvBEpSIx8eVrQfOjGubuXRGjroBPuOI">
-            <GoogleMap
-              mapContainerStyle={{ width: "100%", height: "100%" }}
-              center={currentLocation}
-              zoom={10}
-            >
-              {directions && <DirectionsRenderer directions={directions} />}
-            </GoogleMap>
-          </LoadScript>
+          <GoogleMap
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+            center={currentLocation}
+            zoom={10}
+          >
+            {directions && <DirectionsRenderer directions={directions} />}
+          </GoogleMap>
         </div>
       )}
     </div>
