@@ -3,6 +3,47 @@ import Doc from "../models/PlaceSchema.js";
 
 const placeRouter = express.Router();
 // POST: Upload place with image
+placeRouter.post("/registerAll", async (req, res) => {
+  try {
+    const places = req.body;
+
+    if (!Array.isArray(places) || places.length === 0) {
+      return res.status(400).json({ message: "Request must be an array of places." });
+    }
+
+    const savedPlaces = [];
+
+    for (const place of places) {
+      const { name, description, address, imageUrl } = place;
+
+      if (!name || !description || !address || !imageUrl) {
+        continue; // skip incomplete entries
+      }
+
+      const existingPlace = await Doc.findOne({
+        name: name.trim(),
+        address: address.trim(),
+        imageUrl: imageUrl.trim(),
+      });
+
+      if (!existingPlace) {
+        const newPlace = new Doc({
+          name: name.trim(),
+          description: description.trim(),
+          address: address.trim(),
+          imageUrl: imageUrl.trim(),
+        });
+
+        await newPlace.save();
+        savedPlaces.push(newPlace);
+      }
+    }
+
+    res.status(201).json({ message: "Places added", savedPlaces });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding places", error });
+  }
+});
 placeRouter.post("/register", async (req, res) => {
   try {
     const { name, description, address, imageUrl } = req.body;
@@ -36,7 +77,6 @@ placeRouter.post("/register", async (req, res) => {
     res.status(500).json({ message: "Error registering place", error });
   }
 });
-
 
 // GET: Individual place info
 placeRouter.get("/places/:id", async (req, res) => {
