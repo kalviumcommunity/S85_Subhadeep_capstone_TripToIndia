@@ -22,7 +22,7 @@ const TopPlaces = ({ theme }) => {
   return (
     <div className={`min-h-screen ml-20 px-6 py-10}`}>
       <h1 className="text-3xl font-bold mb-8">Top Places →</h1>
-      <div className={`grid grid-cols-1 ml-16 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}>
+      <div className={`grid grid-cols-3 ml-16 gap-6 `}>
         {places.map((place) => (
           <div
             key={place._id}
@@ -44,7 +44,7 @@ const TopPlaces = ({ theme }) => {
     isDark ? "bg-[#111] text-gray-300" : "bg-white text-gray-800"
   }`}
 >
-  <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-pink-500">
+  <h2 className="text-3xl font-bold text-center mb-4 text-pink-500">
     Why TripToIndia?
   </h2>
   <p className="text-center text-lg leading-relaxed max-w-4xl mx-auto">
