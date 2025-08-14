@@ -14,10 +14,10 @@ const navigate = useNavigate();
         isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
       }`}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div className="w-full px-8">
+        <div className="flex flex-row items-center justify-between gap-8">
           {/* Image Section */}
-          <div className="w-full lg:w-1/2">
+          <div className="w-1/2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
                 <div className="overflow-hidden rounded-3xl shadow-xl">
@@ -48,11 +48,11 @@ const navigate = useNavigate();
           </div>
 
           {/* Text Section */}
-          <div className="w-full lg:w-1/2 lg:pl-8">
+          <div className="w-1/2 pl-8">
             <span className="italic text-3xl  font-thin mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-white to-green-500 tracking-normal">
               𝐃𝐢𝐬𝐜𝐨𝐯𝐞𝐫 𝐈𝐧𝐝𝐢𝐚
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 leading-tight">
+            <h2 className="text-4xl font-extrabold mb-6 leading-tight">
               Why TripToIndia is Your Ideal Travel Companion
             </h2>
             <div className="space-y-4">

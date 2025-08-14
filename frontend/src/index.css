@@ -1,20 +1,133 @@
+/* Add this to your main index.css file */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* *{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: sans-serif;
-}
-.container{
-  width: 100vw;
-  min-height: 100vh;
-  background:  #ced8ff;
-  transition: 0.5s;
-}
-.container.dark{
-background: #222;
-color: white;
-} */
 
+/* 1. Keyframes for the live animated background.
+  It works by moving the position of a very large gradient.
+*/
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 2. Utility class to apply the background animation.
+  This is used on the main container div.
+*/
+.animated-background {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient-move 15s ease infinite;
+}
+
+/* 3. Modern Navbar Particle Animations */
+.particle {
+  position: absolute;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 6s ease-in-out infinite;
+}
+
+.particle-1 {
+  width: 4px;
+  height: 4px;
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 8s;
+}
+
+.particle-2 {
+  width: 6px;
+  height: 6px;
+  top: 60%;
+  left: 30%;
+  animation-delay: 2s;
+  animation-duration: 10s;
+}
+
+.particle-3 {
+  width: 3px;
+  height: 3px;
+  top: 40%;
+  left: 70%;
+  animation-delay: 4s;
+  animation-duration: 7s;
+}
+
+.particle-4 {
+  width: 5px;
+  height: 5px;
+  top: 80%;
+  left: 50%;
+  animation-delay: 1s;
+  animation-duration: 9s;
+}
+
+.particle-5 {
+  width: 4px;
+  height: 4px;
+  top: 30%;
+  left: 90%;
+  animation-delay: 3s;
+  animation-duration: 6s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-15px) scale(0.9);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translateY(-25px) translateX(5px) scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* 4. Modern Glow Effects */
+.glow-effect {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-effect:hover {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+}
+
+/* 5. Smooth Transitions */
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 3. Keyframes for the form's fade-in and scale-up entry animation.
+*/
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 4. Utility class to apply the entry animation.
+  You'll need to add this class to your `tailwind.config.js` if you
+  want to use it directly like `animate-fade-in-scale`. For simplicity here,
+  I've applied it directly but will show how to configure it below.
+*/
+.animate-fade-in-scale {
+  animation: fade-in-scale 0.5s ease-out forwards;
+}

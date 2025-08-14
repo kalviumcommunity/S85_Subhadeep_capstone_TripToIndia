@@ -44,7 +44,7 @@ const Home = ({ theme }) => {
           isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-end items-center">
+        <div className="max-w-7xl mx-auto px-8 py-4 flex justify-end items-center">
           <div className="w-full max-w-xs relative">
             <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
               <FiSearch size={18} />
@@ -108,17 +108,17 @@ const Home = ({ theme }) => {
               })()}
 
             <div className="flex flex-wrap -mx-4">
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="pt-16 lg:pt-20 px-4 sm:px-6 lg:px-8">
+              <div className="w-6/12 px-4">
+                <div className="pt-20 px-8">
                   <h1
-                    className={`text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6 ${
+                    className={`text-6xl font-extrabold tracking-tight leading-tight mb-6 ${
                       isDark ? "text-white" : "text-gray-900"
                     }`}
                   >
                     Athithidevo Bhava!
                   </h1>
                   <h2
-                    className="text-4xl md:text-5xl lg:text-6xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-lime-200 to-green-500 leading-[1.3] tracking-normal"
+                    className="text-6xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-lime-200 to-green-500 leading-[1.3] tracking-normal"
                     style={{
                       fontFamily: `'Noto Sans Devanagari', sans-serif`,
                       lineHeight: "1.4",
@@ -143,7 +143,7 @@ const Home = ({ theme }) => {
                 </div>
               </div>
 
-              <div className="w-1/2 lg:w-2/12 px-4">
+              <div className="w-2/12 px-4">
                 <div className="overflow-hidden pt-8 mt-0">
                   <img
                     src={heroImg}
@@ -153,7 +153,7 @@ const Home = ({ theme }) => {
                 </div>
               </div>
 
-              <div className="w-1/2 lg:w-2/12 px-4">
+              <div className="w-2/12 px-4">
                 <div className="overflow-hidden pt-8 mt-[1cm]">
                   <video
                     src={heroVideo}
@@ -163,7 +163,7 @@ const Home = ({ theme }) => {
                 </div>
               </div>
 
-              <div className="w-1/2 lg:w-2/12 px-4">
+              <div className="w-2/12 px-4">
                 <div className="overflow-hidden pt-8 mt-[2cm]">
                   <img
                     src={heroImg02}
@@ -182,7 +182,7 @@ const Home = ({ theme }) => {
           <section className="py-16">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center border border-dashed rounded-2xl p-10 shadow-md bg-white dark:bg-[#333] transition-all">
               <h2 className="text-3xl font-bold mb-4 text-pink-500">
-                {user.role === "admin" ? "Add Place" : "Share Your Information"}
+                {user.role === "admin" ? "Add Place" : "Share Your Feedback"}
               </h2>
               <p
                 className={`text-lg ${
@@ -195,11 +195,11 @@ const Home = ({ theme }) => {
               </p>
               <button
                 onClick={() =>
-                  navigate(user.role === "admin" ? "/add-info" : "/share-info")
+                  navigate(user.role === "admin" ? "/add-info" : "/FeedBack")
                 }
                 className="px-6 py-3 bg-pink-500 text-white rounded-full font-medium hover:bg-pink-600 transition"
               >
-                {user.role === "admin" ? "Add Place" : "Share Your Information"}
+                {user.role === "admin" ? "Add Place" : "Share Your Feedback"}
               </button>
             </div>
           </section>

@@ -14,25 +14,7 @@ const Testimonials = () => {
         swipeToSlide: true,
         autoplaySpeed: 2000,
         slidesToShow: 3,
-
-        responsive: [
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true,
-                },
-            },
-            {
-                breakpoint: 576,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                },
-            },
-        ]
+        slidesToScroll: 1
     }
 
     return (

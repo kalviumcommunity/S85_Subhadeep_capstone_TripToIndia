@@ -23,22 +23,61 @@ const Navbar = ({ theme, setTheme }) => {
   ];
 
   return (
-    <div
-      className={`w-screen z-50 shadow-md ${
-        theme === "dark"
-          ? "bg-gradient-to-r from-black via-gray-900 to-black text-white"
-          : "bg-white text-black"
-      } transition-colors duration-500`}
-    >
-      <nav className="max-w-screen-xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4 text-lg font-medium h-20 relative">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <img
-            src={theme === "light" ? logo_dark : logo_light}
-            alt="Logo"
-            className="w-12 h-12 hover:rotate-12 transition-transform duration-300"
-          />
-        </Link>
+    <>
+      {/* Spacer for fixed navbar */}
+      <div className="h-20" />
+
+      {/* Modern Extraordinary Navbar */}
+      <div className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl">
+        {/* Animated Background Video */}
+        <div className="absolute inset-0 overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-30"
+          >
+            <source src="/navbar-video.mp4" type="video/mp4" />
+          </video>
+          {/* Gradient Overlay */}
+          <div className={`absolute inset-0 bg-gradient-to-r from-orange-500/25 via-gray-400 to-green-400/25 "
+          }`}></div>
+
+          {/* Animated Particles */}
+          <div className="absolute inset-0">
+            <div className="particle particle-1"></div>
+            <div className="particle particle-2"></div>
+            <div className="particle particle-3"></div>
+            <div className="particle particle-4"></div>
+            <div className="particle particle-5"></div>
+          </div>
+        </div>
+
+        {/* Glassmorphism Border */}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+
+        <nav className="relative max-w-screen-xl mx-auto flex items-center justify-between px-6 py-4 h-20">
+          {/* Futuristic Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <div className={`absolute inset-0 rounded-full blur-md ${
+                theme === "dark" ? "bg-blue-400/50" : "bg-purple-400/50"
+              } group-hover:blur-lg transition-all duration-300`}></div>
+              <img
+                src={theme === "light" ? logo_dark : logo_light}
+                alt="Logo"
+                className="relative w-12 h-12 hover:rotate-12 transition-all duration-500 hover:scale-110"
+              />
+            </div>
+            <span className={`text-xl font-bold bg-gradient-to-r ${
+              theme === "dark"
+                ? "from-orange-400 via-gray-300 to-green-400"
+                : "from-orange-600 via-gray-300 to-green-700"
+            } bg-clip-text text-transparent hover:scale-105 transition-transform duration-300`}>
+              TripToIndia
+            </span>
+          </Link>
 
         {/* Hamburger Icon */}
         <button
@@ -49,22 +88,39 @@ const Navbar = ({ theme, setTheme }) => {
         </button>
 
         {/* Center Navigation (Desktop) */}
-        <ul className="hidden md:flex items-center justify-center gap-20 flex-1">
+        <ul className="hidden md:flex items-center justify-center gap-16 flex-1">
           {navLinks.map(({ name, path }) => (
             <li key={path} className="relative group">
               <Link
                 to={path}
-                className={`transition-colors duration-300 font-semibold ${
-                  theme === "dark" ? "text-white" : "text-black"
+                className={`relative px-4 py-3 transition-all duration-500 font-bold text-lg hover:scale-105 transform ${
+                  theme === "dark" ? "text-white" : "text-gray-800"
                 }`}
               >
-                {name}
+                <span className="relative z-10">{name}</span>
+                {/* Hover background effect */}
+                <div className={`absolute inset-0 rounded-xl transition-all duration-500 transform scale-0 group-hover:scale-100 ${
+                  theme === "dark"
+                    ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 shadow-lg shadow-purple-500/25"
+                    : "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 shadow-lg shadow-blue-500/25"
+                }`}></div>
+                {/* Active state background */}
+                {location.pathname === path && (
+                  <div className={`absolute inset-0 rounded-xl transition-all duration-500 ${
+                    theme === "dark"
+                      ? "bg-gradient-to-r from-purple-600/30 to-pink-600/30 shadow-xl shadow-purple-500/30"
+                      : "bg-gradient-to-r from-blue-600/30 to-cyan-600/30 shadow-xl shadow-blue-500/30"
+                  }`}></div>
+                )}
               </Link>
+              {/* Modern underline effect */}
               <span
-                className={`absolute left-0 -bottom-1 h-[3px] w-full transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ${
-                  location.pathname === path
-                    ? "scale-x-100 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500"
-                    : "bg-blue-500"
+                className={`absolute left-1/2 -bottom-1 h-1 transform -translate-x-1/2 transition-all duration-500 ease-out rounded-full ${
+                  location.pathname === path ? "w-8 opacity-100" : "w-0 opacity-0 group-hover:w-6 group-hover:opacity-100"
+                } ${
+                  theme === "dark"
+                    ? "bg-gradient-to-r from-fuchsia-400 to-purple-400 shadow-lg shadow-purple-400/50"
+                    : "bg-gradient-to-r from-sky-400 to-blue-500 shadow-lg shadow-blue-400/50"
                 }`}
               />
             </li>
@@ -72,32 +128,53 @@ const Navbar = ({ theme, setTheme }) => {
         </ul>
 
         {/* Theme Toggle + Profile/Login (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
-          <img
+        <div className="hidden md:flex items-center gap-6">
+          {/* Modern Theme Toggle */}
+          <div
             onClick={toggleMode}
-            src={theme === "light" ? night : day}
-            alt="Toggle Theme"
-            className="w-8 h-8 cursor-pointer hover:scale-110 transition-transform duration-300"
-          />
+            className={`relative w-16 h-8 rounded-full cursor-pointer transition-all duration-500 ${
+              theme === "dark"
+                ? "bg-gradient-to-r from-orange-400 to-green-600 shadow-lg shadow-purple-500/30"
+                : "bg-gradient-to-r from-orange-400 to-green-400 shadow-lg shadow-yellow-400/30"
+            }`}
+          >
+            <div className={`absolute top-1 w-6 h-6 rounded-full transition-all duration-500 transform ${
+              theme === "dark" ? "translate-x-9 bg-gray-800" : "translate-x-1 bg-white"
+            } shadow-lg flex items-center justify-center`}>
+              <img
+                src={theme === "light" ? night : day}
+                alt="Toggle Theme"
+                className="w-4 h-4 transition-transform duration-300 hover:rotate-12"
+              />
+            </div>
+          </div>
 
           {user ? (
-            <Link to="/profile" title="Profile">
+            <Link to="/profile" title="Profile" className="relative group">
+              <div className={`absolute inset-0 rounded-full blur-md ${
+                theme === "dark" ? "bg-blue-400/50" : "bg-purple-400/50"
+              } group-hover:blur-lg transition-all duration-300`}></div>
               <img
                 src={`https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=0D8ABC&color=fff`}
                 alt="Profile"
-                className="w-10 h-10 rounded-full border-2 border-blue-500 shadow-lg hover:scale-105 transition-transform duration-300"
+                className="relative w-12 h-12 rounded-full border-2 border-white/50 shadow-xl hover:scale-110 transition-all duration-300"
               />
             </Link>
           ) : (
             <Link
               to="/login"
-              className={`px-3 py-1 rounded-lg border font-semibold ${
+              className={`relative px-6 py-3 rounded-xl font-bold text-sm overflow-hidden group transition-all duration-500 ${
                 theme === "dark"
-                  ? "border-white text-white hover:bg-white hover:text-black"
-                  : "border-black text-black hover:bg-black hover:text-white"
-              } transition duration-300`}
+                  ? "text-white border border-white/30 hover:border-white/60"
+                  : "text-gray-800 border border-gray-800/30 hover:border-gray-800/60"
+              }`}
             >
-              Log In / Sign In
+              <span className="relative z-10">Login</span>
+              <div className={`absolute inset-0 transition-all duration-500 transform scale-x-0 group-hover:scale-x-100 ${
+                theme === "dark"
+                  ? "bg-gradient-to-r from-purple-600 to-blue-600"
+                  : "bg-gradient-to-r from-blue-600 to-purple-600"
+              }`}></div>
             </Link>
           )}
         </div>
@@ -182,6 +259,7 @@ const Navbar = ({ theme, setTheme }) => {
         )}
       </nav>
     </div>
+    </>
   );
 };
 
