@@ -287,7 +287,6 @@ router.post("/resend-otp", async (req, res) => {
         message: "Email and purpose are required!"
       });
     }
-
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
