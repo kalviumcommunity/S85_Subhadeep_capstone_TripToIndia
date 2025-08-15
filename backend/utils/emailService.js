@@ -11,7 +11,6 @@ const createTransporter = () => {
   });
 };
 
-
 // Send password reset email
 export const sendPasswordResetEmail = async (email, resetToken, userName) => {
   try {
