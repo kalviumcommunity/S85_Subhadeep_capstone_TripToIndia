@@ -85,6 +85,7 @@ const Login = ({ theme }) => {
   // Google Login Handler
   const handleGoogleLogin = () => {
     const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
+// <<<<<<< branch_118
 
     // Check if we're in production and OAuth might not be configured
     if (!import.meta.env.DEV) {
@@ -92,6 +93,8 @@ const Login = ({ theme }) => {
       return;
     }
 
+// =======
+// >>>>>>> main
     window.location.href = `${BASE_URL}/api/v1/auth/google`;
   };
 

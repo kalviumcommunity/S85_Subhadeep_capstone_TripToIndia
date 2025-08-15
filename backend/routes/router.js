@@ -32,7 +32,11 @@ router.post("/check-email", async (req, res) => {
   }
 });
 
+// <<<<<<< branch_118
 // POST: Register User (Direct Registration - No OTP)
+// =======
+// POST: Register User (Step 1 - Send OTP)
+// >>>>>>> main
 router.post("/register", async (req, res) => {
   try {
     const { firstname, lastname, email, phone, password, role } = req.body;
@@ -62,7 +66,15 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+// <<<<<<< branch_118
     // Create new user (verified by default since no email verification)
+// =======
+    // Generate OTP
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Create new user (unverified)
+// >>>>>>> main
     const newUser = new User({
       firstname,
       lastname,
@@ -70,12 +82,21 @@ router.post("/register", async (req, res) => {
       phone,
       password: hashedPassword,
       role: role || 'user',
+// <<<<<<< branch_118
       isEmailVerified: true, // Set to true since we're not doing email verification
       isOtpVerified: true
+=======
+      otp,
+      otpExpires,
+      otpPurpose: 'signup',
+      isEmailVerified: false,
+      isOtpVerified: false
+// >>>>>>> main
     });
 
     await newUser.save();
 
+// <<<<<<< branch_118
     // Generate JWT token for immediate login
     const token = generateToken(newUser._id);
 
@@ -94,6 +115,26 @@ router.post("/register", async (req, res) => {
         isEmailVerified: newUser.isEmailVerified
       }
     });
+// =======
+    // Send OTP email
+    const emailResult = await sendSignupOTP(email, otp, firstname);
+
+    if (emailResult.success) {
+      res.status(201).json({
+        success: true,
+        message: "Registration initiated! Please check your email for verification code.",
+        userId: newUser._id,
+        email: email
+      });
+    } else {
+      // Remove user if email failed
+      await User.findByIdAndDelete(newUser._id);
+      res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again."
+      });
+    }
+// >>>>>>> main
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -163,7 +204,11 @@ router.post("/verify-signup-otp", async (req, res) => {
   }
 });
 
+// <<<<<<< branch_118
 // POST: Login user (Direct Login - No OTP)
+// =======
+// POST: Login user (Step 1 - Verify credentials and send OTP)
+// >>>>>>> main
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -190,6 +235,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
     }
 
+// <<<<<<< branch_118
     // Generate JWT token for immediate login
     const token = generateToken(user._id);
 
@@ -210,6 +256,34 @@ router.post("/login", async (req, res) => {
         isEmailVerified: user.isEmailVerified
       },
     });
+// =======
+    // Generate OTP for manual login
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Save OTP to user
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    user.otpPurpose = 'login';
+    await user.save();
+
+    // Send OTP email
+    const emailResult = await sendLoginOTP(email, otp, user.firstname);
+
+    if (emailResult.success) {
+      res.status(200).json({
+        success: true,
+        message: "Credentials verified! Please check your email for the verification code.",
+        requiresOTP: true,
+        email: email
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to send verification code. Please try again."
+      });
+    }
+// >>>>>>> main
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -331,12 +405,70 @@ router.post("/resend-otp", async (req, res) => {
   }
 });
 
+// <<<<<<< branch_118
 // POST: Forgot Password (Disabled - Email service not configured)
 router.post("/forgot-password", async (req, res) => {
   res.status(503).json({
     success: false,
     message: "Password reset feature is temporarily unavailable. Please contact support for assistance."
   });
+// =======
+// POST: Forgot Password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required!"
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found with this email address!"
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Set token and expiration (1 hour)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+    await user.save();
+
+    // Send password reset email
+    const emailResult = await sendPasswordResetEmail(
+      email,
+      resetToken,
+      user.firstname
+    );
+
+    if (emailResult.success) {
+      res.status(200).json({
+        success: true,
+        message: "Password reset email sent successfully! Please check your inbox."
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to send password reset email. Please try again."
+      });
+    }
+
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later."
+    });
+  }
+// >>>>>>> main
 });
 
 // POST: Reset Password

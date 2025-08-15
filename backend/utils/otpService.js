@@ -8,7 +8,11 @@ export const generateOTP = () => {
 
 // Create email transporter
 const createTransporter = () => {
+// <<<<<<< branch_118
   return nodemailer.createTransport({
+// =======
+  return nodemailer.createTransporter({
+// >>>>>>> main
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
@@ -20,6 +24,7 @@ const createTransporter = () => {
 // Send OTP email for login
 export const sendLoginOTP = async (email, otp, userName) => {
   try {
+// <<<<<<< branch_118
     // Check if email is configured
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       // Development mode - log OTP to console
@@ -38,6 +43,10 @@ export const sendLoginOTP = async (email, otp, userName) => {
 
     const transporter = createTransporter();
 
+// =======
+    const transporter = createTransporter();
+    
+// >>>>>>> main
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,

@@ -76,7 +76,9 @@ const navigate = useNavigate();
             </div>
             <div className="mt-6 lg:mt-8">
               <button onClick={handleStartJourney} className="bg-[#41A4FF] hover:bg-blue-600 text-white px-6 lg:px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300 transform hover:-translate-y-1">
+
               Start Your Journey  
+
               </button>
             </div>
           </div>
