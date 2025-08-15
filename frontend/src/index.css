@@ -4,6 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar for mobile image gallery */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
 /* 1. Keyframes for the live animated background.
   It works by moving the position of a very large gradient.
 */

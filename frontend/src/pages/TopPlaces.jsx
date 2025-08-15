@@ -20,9 +20,9 @@ const TopPlaces = ({ theme }) => {
   }, []);
 
   return (
-    <div className={`min-h-screen ml-20 px-6 py-10}`}>
-      <h1 className="text-3xl font-bold mb-8">Top Places →</h1>
-      <div className={`grid grid-cols-3 ml-16 gap-6 `}>
+    <div className={`min-h-screen px-4 lg:ml-20 lg:px-6 py-6 lg:py-10 ${isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"}`}>
+      <h1 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center lg:text-left">Top Places →</h1>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:ml-16 gap-4 lg:gap-6`}>
         {places.map((place) => (
           <div
             key={place._id}
@@ -32,26 +32,26 @@ const TopPlaces = ({ theme }) => {
             <img
               src={place.imageUrl}
               alt={place.name}
-              className="w-full h-48 object-cover rounded-md mb-4"
+              className="w-full h-40 lg:h-48 object-cover rounded-md mb-4"
             />
-            <h2 className="text-xl font-semibold">{place.name}</h2>
+            <h2 className="text-lg lg:text-xl font-semibold">{place.name}</h2>
           </div>
         ))}
       </div>
       {/* About TripToIndia Section */}
 <div
-  className={`mt-8 px-6 ml-16  py-10 rounded-2xl shadow-inner transition-all duration-500 ${
+  className={`mt-6 lg:mt-8 px-4 lg:px-6 lg:ml-16 py-6 lg:py-10 rounded-2xl shadow-inner transition-all duration-500 ${
     isDark ? "bg-[#111] text-gray-300" : "bg-white text-gray-800"
   }`}
 >
-  <h2 className="text-3xl font-bold text-center mb-4 text-pink-500">
+  <h2 className="text-2xl lg:text-3xl font-bold text-center mb-4 text-pink-500">
     Why TripToIndia?
   </h2>
-  <p className="text-center text-lg leading-relaxed max-w-4xl mx-auto">
+  <p className="text-center text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
     At <span className="font-semibold text-blue-500">TripToIndia</span>, we believe that every journey is more than a destination—it's a story.
     Our mission is to connect explorers with the heart and soul of India's most beautiful and hidden gems. 🌄
   </p>
-  <p className="text-center text-md leading-relaxed mt-4 max-w-3xl mx-auto italic">
+  <p className="text-center text-sm lg:text-base leading-relaxed mt-4 max-w-3xl mx-auto italic">
     From the snowy peaks of the Himalayas to the calm shores of the Indian Ocean, we help you discover, share, and relive moments that matter. ✨
   </p>
   <div className="mt-6 text-center">
