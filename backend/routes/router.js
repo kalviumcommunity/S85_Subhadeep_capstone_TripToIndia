@@ -32,11 +32,6 @@ router.post("/check-email", async (req, res) => {
   }
 });
 
-// <<<<<<< branch_118
-// POST: Register User (Direct Registration - No OTP)
-// =======
-// POST: Register User (Step 1 - Send OTP)
-// >>>>>>> main
 router.post("/register", async (req, res) => {
   try {
     const { firstname, lastname, email, phone, password, role } = req.body;
@@ -66,15 +61,11 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-// <<<<<<< branch_118
-    // Create new user (verified by default since no email verification)
-// =======
-    // Generate OTP
+
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Create new user (unverified)
-// >>>>>>> main
+
     const newUser = new User({
       firstname,
       lastname,
@@ -82,22 +73,18 @@ router.post("/register", async (req, res) => {
       phone,
       password: hashedPassword,
       role: role || 'user',
-// <<<<<<< branch_118
+
       isEmailVerified: true, // Set to true since we're not doing email verification
       isOtpVerified: true
-=======
       otp,
       otpExpires,
       otpPurpose: 'signup',
       isEmailVerified: false,
       isOtpVerified: false
-// >>>>>>> main
     });
 
     await newUser.save();
 
-// <<<<<<< branch_118
-    // Generate JWT token for immediate login
     const token = generateToken(newUser._id);
 
     res.status(201).json({
@@ -115,8 +102,7 @@ router.post("/register", async (req, res) => {
         isEmailVerified: newUser.isEmailVerified
       }
     });
-// =======
-    // Send OTP email
+
     const emailResult = await sendSignupOTP(email, otp, firstname);
 
     if (emailResult.success) {
@@ -134,14 +120,12 @@ router.post("/register", async (req, res) => {
         message: "Failed to send verification email. Please try again."
       });
     }
-// >>>>>>> main
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// POST: Verify Signup OTP
 router.post("/verify-signup-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -204,11 +188,7 @@ router.post("/verify-signup-otp", async (req, res) => {
   }
 });
 
-// <<<<<<< branch_118
-// POST: Login user (Direct Login - No OTP)
-// =======
-// POST: Login user (Step 1 - Verify credentials and send OTP)
-// >>>>>>> main
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -235,8 +215,6 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
     }
 
-// <<<<<<< branch_118
-    // Generate JWT token for immediate login
     const token = generateToken(user._id);
 
     // Success - Direct login
@@ -256,8 +234,7 @@ router.post("/login", async (req, res) => {
         isEmailVerified: user.isEmailVerified
       },
     });
-// =======
-    // Generate OTP for manual login
+
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
