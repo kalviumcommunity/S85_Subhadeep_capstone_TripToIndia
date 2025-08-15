@@ -125,13 +125,13 @@ const PlaceDetails = ({ theme }) => {
 
   return (
     <div
-      className={`w-screen min-h-screen flex flex-col items-center justify-start px-4 py-10 transition-all duration-300 ${
+      className={`w-screen min-h-screen flex flex-col items-center justify-start px-4 py-6 lg:py-10 transition-all duration-300 ${
         isDark ? "bg-[#1a1a1a] text-white" : "bg-[#ced8ff] text-black"
       }`}
     >
       {!showRoute && (
         <div
-          className={`relative max-w-3xl w-full rounded-2xl shadow-2xl p-8 border flex flex-col justify-between ${
+          className={`relative max-w-3xl w-full rounded-2xl shadow-2xl p-4 lg:p-8 border flex flex-col justify-between ${
             isDark ? "bg-[#2b2b2b] border-gray-700" : "bg-white border-gray-300"
           } transition-all duration-300 hover:shadow-blue-200`}
         >
@@ -143,13 +143,13 @@ const PlaceDetails = ({ theme }) => {
           </button>
 
           <div className="max-w-3xl mx-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-4xl font-bold flex items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold flex items-center">
                 {place.name}
               </h1>
               <button
                 onClick={handleGetDirections}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow mr-8"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow w-full sm:w-auto"
               >
                 Go There →
               </button>
@@ -158,16 +158,16 @@ const PlaceDetails = ({ theme }) => {
             <img
               src={place.imageUrl}
               alt={place.name}
-              className="rounded-lg mb-6 shadow-lg border object-cover w-full max-h-[400px]"
+              className="rounded-lg mb-4 lg:mb-6 shadow-lg border object-cover w-full max-h-[300px] lg:max-h-[400px]"
             />
-            <p className="text-lg">{place.description}</p>
+            <p className="text-base lg:text-lg">{place.description}</p>
             <p className="mt-4 text-sm text-gray-500">{place.address}</p>
           </div>
         </div>
       )}
 
       {showRoute && currentLocation && (
-        <div className="mt-10 w-full max-w-3xl h-[400px]">
+        <div className="mt-6 lg:mt-10 w-full max-w-3xl h-[300px] lg:h-[400px]">
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
             center={currentLocation}

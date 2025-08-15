@@ -177,19 +177,19 @@ const FeedBack = ({ theme }) => {
     <div className={`w-screen h-screen flex overflow-hidden ${isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"}`}>
 
       {/* Left Side: Feedback Form */}
-      <div className="w-1/2 flex justify-center items-center p-8 transition-colors duration-500">
+      <div className="w-full lg:w-1/2 flex justify-center items-center p-4 lg:p-8 transition-colors duration-500">
         <div className={`w-full max-w-md transition-all duration-500 ${
           isDark ? "text-white" : "text-gray-900"
         }`}>
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className={`text-4xl font-bold mb-2 ${
+          <div className="text-center mb-6 lg:mb-8">
+            <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 ${
               isDark ? "text-white" : "text-gray-900"
             }`}>
               Share Your Feedback
             </h1>
-            <p className={`text-lg ${
+            <p className={`text-sm sm:text-base lg:text-lg ${
               isDark ? "text-gray-300" : "text-gray-600"
             }`}>
               Help us improve your travel experience
@@ -197,7 +197,7 @@ const FeedBack = ({ theme }) => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
 
             {/* Name Field */}
             <div className="relative">
@@ -398,8 +398,8 @@ const FeedBack = ({ theme }) => {
         </div>
       </div>
 
-      {/* Right Side: Interactive Art */}
-      <div className="flex w-1/2 h-full items-center justify-center relative overflow-hidden">
+      {/* Right Side: Interactive Art - Hidden on mobile, visible on desktop */}
+      <div className="hidden lg:flex lg:w-1/2 h-full items-center justify-center relative overflow-hidden">
         <InteractiveArt theme={theme} />
       </div>
     </div>

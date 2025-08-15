@@ -32,12 +32,38 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.googleId && !this.facebookId; // Password required only if not social login
+    },
     minLength: [6, "Password must be at least 6 characters long!"],
   },
   role:{
     type: String,
-    required:true
+    required: true,
+    default: "user"
+  },
+  // Social Authentication fields
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true // Allows multiple null values
+  },
+  facebookId: {
+    type: String,
+    unique: true,
+    sparse: true // Allows multiple null values
+  },
+  profilePicture: {
+    type: String, // URL to profile picture from social providers
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google', 'facebook'],
+    default: 'local'
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
   }
 });
 

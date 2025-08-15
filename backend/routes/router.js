@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/UserSchema.js";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../utils/jwt.js";
 
 const router = express.Router();
 
@@ -32,7 +33,23 @@ router.post("/register", async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ message: "User created successfully!", newUser });
+
+    // Generate JWT token for immediate login after registration
+    const token = generateToken(newUser._id);
+
+    res.status(201).json({
+      message: "User created successfully!",
+      token,
+      user: {
+        _id: newUser._id,
+        firstname: newUser.firstname,
+        lastname: newUser.lastname,
+        email: newUser.email,
+        phone: newUser.phone,
+        role: newUser.role,
+        authProvider: newUser.authProvider
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -57,10 +74,14 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
     }
 
+    // Generate JWT token
+    const token = generateToken(user._id);
+
     // Success
     res.status(200).json({
       success: true,
       message: "Login successful!",
+      token,
       user: {
         _id: user._id,
         firstname: user.firstname,
@@ -68,6 +89,8 @@ router.post("/login", async (req, res) => {
         email: user.email,
         phone: user.phone,
         role: user.role,
+        authProvider: user.authProvider,
+        profilePicture: user.profilePicture
       },
     });
   } catch (error) {
