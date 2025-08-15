@@ -14,10 +14,10 @@ const navigate = useNavigate();
         isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
       }`}
     >
-      <div className="w-full px-8">
-        <div className="flex flex-row items-center justify-between gap-8">
+      <div className="w-full px-4 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           {/* Image Section */}
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2 order-2 lg:order-1">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
                 <div className="overflow-hidden rounded-3xl shadow-xl">
@@ -48,11 +48,11 @@ const navigate = useNavigate();
           </div>
 
           {/* Text Section */}
-          <div className="w-1/2 pl-8">
-            <span className="italic text-3xl  font-thin mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-white to-green-500 tracking-normal">
+          <div className="w-full lg:w-1/2 lg:pl-8 order-1 lg:order-2 text-center lg:text-left">
+            <span className="italic text-2xl sm:text-3xl font-thin mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-white to-green-500 tracking-normal">
               𝐃𝐢𝐬𝐜𝐨𝐯𝐞𝐫 𝐈𝐧𝐝𝐢𝐚
             </span>
-            <h2 className="text-4xl font-extrabold mb-6 leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4 lg:mb-6 leading-tight">
               Why TripToIndia is Your Ideal Travel Companion
             </h2>
             <div className="space-y-4">
@@ -63,7 +63,7 @@ const navigate = useNavigate();
               >
                 Explore the majestic beauty, cultural richness, and hidden gems of India with us.
                 From Himalayan peaks to Goan beaches, we bring you handpicked destinations that
-                match your travel dreams.
+                match your travel dreams. 
               </p>
               <p
                 className={`text-base leading-relaxed ${
@@ -71,12 +71,12 @@ const navigate = useNavigate();
                 }`}
               >
                 Our platform offers trusted guides, curated experiences, and 24/7 support to make
-                your journey smooth and memorable. Let every step in India be full of wonder!
+                your journey smooth and memorable. Let every step in India be full of wonder!  
               </p>
             </div>
-            <div className="mt-8">
-              <button onClick={handleStartJourney} className="bg-[#41A4FF] hover:bg-blue-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300 transform hover:-translate-y-1">
-                Start Your Journey
+            <div className="mt-6 lg:mt-8">
+              <button onClick={handleStartJourney} className="bg-[#41A4FF] hover:bg-blue-600 text-white px-6 lg:px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300 transform hover:-translate-y-1">
+              Start Your Journey  
               </button>
             </div>
           </div>

@@ -189,16 +189,34 @@ const Navbar = ({ theme, setTheme }) => {
             />
             {/* Mobile Menu */}
             <div className="fixed top-0 left-0 w-full z-50 md:hidden animate-slideDown">
-              <div className="bg-white dark:bg-[#222] border-b border-pink-500 shadow-xl rounded-b-2xl mx-2 mt-2">
-                <ul className="flex flex-col items-center gap-8 py-8">
+              <div className={`${
+                theme === "dark" ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
+              } border-b border-pink-500 shadow-xl rounded-b-2xl mx-2 mt-2 relative`}>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                    theme === "dark"
+                      ? "bg-gray-700 hover:bg-gray-600 text-white"
+                      : "bg-gray-200 hover:bg-gray-300 text-black"
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <ul className="flex flex-col items-center gap-8 py-8 pt-12">
                   {navLinks.map(({ name, path }) => (
                     <li key={path} className="w-full text-center">
                       <Link
                         to={path}
-                        className="block text-xl font-bold py-2 rounded-lg transition
-                          hover:bg-gradient-to-r hover:from-pink-100 hover:to-blue-100
-                          dark:hover:from-[#333] dark:hover:to-[#444]
-                          hover:text-pink-600 dark:hover:text-blue-300"
+                        className={`block text-xl font-bold py-2 rounded-lg transition ${
+                          theme === "dark"
+                            ? "text-white hover:bg-gray-700 hover:text-purple-300"
+                            : "text-black hover:bg-blue-100 hover:text-blue-700"
+                        }`}
                         onClick={() => setMenuOpen(false)}
                       >
                         {name}
@@ -229,11 +247,11 @@ const Navbar = ({ theme, setTheme }) => {
                     ) : (
                       <Link
                         to="/login"
-                        className={`px-5 py-2 rounded-lg border-2 font-bold ${
+                        className={`px-5 py-2 rounded-lg border-2 font-bold transition duration-300 ${
                           theme === "dark"
-                            ? "border-white text-white hover:bg-white hover:text-black"
-                            : "border-black text-black hover:bg-black hover:text-white"
-                        } transition duration-300`}
+                            ? "border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black"
+                            : "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                        }`}
                         onClick={() => setMenuOpen(false)}
                       >
                         Log In / Sign In

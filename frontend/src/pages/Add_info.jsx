@@ -43,12 +43,12 @@ const Add_info = ({ theme }) => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center px-3 py-10 transition duration-300 ${
+      className={`min-h-screen flex items-center justify-center px-4 py-6 lg:py-10 transition duration-300 ${
         isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
       }`}
     >
       <div
-        className={`relative w-full max-w-xl p-5 rounded-3xl shadow-xl ml-40 border transition ${
+        className={`relative w-full max-w-xl p-4 lg:p-5 rounded-3xl shadow-xl lg:ml-40 border transition ${
           isDark ? "bg-[#1e1e1e] border-gray-700" : "bg-white border-gray-200"
         }`}
       >
@@ -59,7 +59,7 @@ const Add_info = ({ theme }) => {
           <IoClose />
         </button>
 
-        <h2 className="text-3xl font-extrabold text-center mb-6 bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 bg-clip-text text-transparent">
+        <h2 className="text-2xl lg:text-3xl font-extrabold text-center mb-4 lg:mb-6 bg-gradient-to-r from-pink-500 via-red-400 to-orange-400 bg-clip-text text-transparent">
           Add New Place
         </h2>
 
@@ -69,7 +69,7 @@ const Add_info = ({ theme }) => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
           {/* Name */}
           <div>
             <label className="text-sm font-medium">Name</label>

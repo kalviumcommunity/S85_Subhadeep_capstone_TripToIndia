@@ -1,23 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import heroImg from "../assets/images/IMG_20240902_151136 copy.jpg";
 import heroImg02 from "../assets/images/hero-img02.jpg";
 import heroVideo from "../assets/images/hero-video.mp4";
 import experienceImg from "../assets/images/trip.png";
 import MasonryImagesGallery from "../Image-gallery/MasonryImagesGallery";
 import Testimonials from "../Testimonial/Testimonials";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import axios from "axios";
+import { loginSuccess } from "../redux/user/userSlice";
 const Home = ({ theme }) => {
   const isDark = theme === "dark";
   const user = useSelector((state) => state.user.currentUser);
+  const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const galleryRef = useRef(null);
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const userData = urlParams.get('user');
+    const authStatus = urlParams.get('auth');
+
+    if (token && userData && authStatus === 'success') {
+      try {
+        // Store token in localStorage
+        localStorage.setItem('token', token);
+
+        // Parse user data and update Redux store
+        const user = JSON.parse(decodeURIComponent(userData));
+        dispatch(loginSuccess(user));
+
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        // Show success message
+        alert(`Welcome ${user.firstname}! You have successfully logged in with ${user.authProvider}.`);
+      } catch (error) {
+        console.error('Error processing OAuth callback:', error);
+        alert('Authentication successful, but there was an error processing your login. Please try again.');
+      }
+    } else if (urlParams.get('error')) {
+      const error = urlParams.get('error');
+      alert(`Authentication failed: ${error}. Please try again.`);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -36,6 +70,30 @@ const Home = ({ theme }) => {
     };
     fetchResults();
   }, [searchTerm]);
+
+  // Handle scroll progress for gallery
+  const handleScroll = () => {
+    if (galleryRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = galleryRef.current;
+      const progress = scrollLeft / (scrollWidth - clientWidth);
+      setScrollProgress(Math.min(progress, 1));
+    }
+  };
+
+  // Scroll to specific position
+  const scrollToPosition = (direction) => {
+    if (galleryRef.current) {
+      const scrollAmount = galleryRef.current.clientWidth * 0.8;
+      const newScrollLeft = direction === 'left'
+        ? galleryRef.current.scrollLeft - scrollAmount
+        : galleryRef.current.scrollLeft + scrollAmount;
+
+      galleryRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <>
@@ -108,17 +166,17 @@ const Home = ({ theme }) => {
               })()}
 
             <div className="flex flex-wrap -mx-4">
-              <div className="w-6/12 px-4">
-                <div className="pt-20 px-8">
+              <div className="w-full lg:w-6/12 px-4">
+                <div className="pt-8 lg:pt-20 px-4 lg:px-8 text-center lg:text-left">
                   <h1
-                    className={`text-6xl font-extrabold tracking-tight leading-tight mb-6 ${
+                    className={`text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4 lg:mb-6 ${
                       isDark ? "text-white" : "text-gray-900"
                     }`}
                   >
                     Athithidevo Bhava!
                   </h1>
                   <h2
-                    className="text-6xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-lime-200 to-green-500 leading-[1.3] tracking-normal"
+                    className="text-3xl sm:text-4xl lg:text-6xl font-bold mt-2 bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-lime-200 to-green-500 leading-[1.3] tracking-normal"
                     style={{
                       fontFamily: `'Noto Sans Devanagari', sans-serif`,
                       lineHeight: "1.4",
@@ -129,7 +187,7 @@ const Home = ({ theme }) => {
                   </h2>
 
                   <p
-                    className={`text-lg md:text-xl leading-relaxed max-w-2xl ${
+                    className={`text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 ${
                       isDark ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
@@ -143,7 +201,8 @@ const Home = ({ theme }) => {
                 </div>
               </div>
 
-              <div className="w-2/12 px-4">
+              {/* Desktop Images - Original Layout */}
+              <div className="hidden lg:block lg:w-2/12 px-4">
                 <div className="overflow-hidden pt-8 mt-0">
                   <img
                     src={heroImg}
@@ -153,7 +212,7 @@ const Home = ({ theme }) => {
                 </div>
               </div>
 
-              <div className="w-2/12 px-4">
+              <div className="hidden lg:block lg:w-2/12 px-4">
                 <div className="overflow-hidden pt-8 mt-[1cm]">
                   <video
                     src={heroVideo}
@@ -163,7 +222,7 @@ const Home = ({ theme }) => {
                 </div>
               </div>
 
-              <div className="w-2/12 px-4">
+              <div className="hidden lg:block lg:w-2/12 px-4">
                 <div className="overflow-hidden pt-8 mt-[2cm]">
                   <img
                     src={heroImg02}
@@ -171,6 +230,86 @@ const Home = ({ theme }) => {
                     className="w-full h-[350px] transition-transform duration-300 hover:scale-105 rounded-2xl border border-orange-500 object-cover"
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* Mobile Images - Horizontal Scroll Layout */}
+            <div className="lg:hidden mt-8 px-4">
+              <div
+                ref={galleryRef}
+                onScroll={handleScroll}
+                className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+                id="heroGallery"
+              >
+                <div className="flex-shrink-0 w-64">
+                  <img
+                    src={heroImg}
+                    alt="Travel destination"
+                    className="w-full h-48 rounded-2xl border border-orange-500 object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="flex-shrink-0 w-64">
+                  <video
+                    src={heroVideo}
+                    controls
+                    className="w-full h-48 rounded-2xl border border-pink-500 object-cover object-center transition-transform duration-300 hover:scale-105"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+                <div className="flex-shrink-0 w-64">
+                  <img
+                    src={heroImg02}
+                    alt="Travel destination"
+                    className="w-full h-48 rounded-2xl border border-orange-500 object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+              </div>
+
+              {/* Functional Scroll Indicator */}
+              <div className="flex items-center justify-center mt-4 mb-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => scrollToPosition('left')}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      isDark
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                        : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  <div className={`relative w-32 h-2 rounded-full ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                    <div
+                      className={`absolute left-0 top-0 h-full rounded-full transition-all duration-300 ${
+                        isDark ? 'bg-gradient-to-r from-purple-500 to-blue-500' : 'bg-gradient-to-r from-orange-500 to-green-500'
+                      }`}
+                      style={{ width: `${Math.max(scrollProgress * 100, 10)}%` }}
+                    ></div>
+                  </div>
+
+                  <button
+                    onClick={() => scrollToPosition('right')}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      isDark
+                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                        : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Scroll Hint Text */}
+              <div className="text-center">
+                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} italic`}>
+                  ← Swipe to explore more →
+                </p>
               </div>
             </div>
           </div>

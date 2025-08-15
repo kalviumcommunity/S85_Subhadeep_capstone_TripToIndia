@@ -10,6 +10,9 @@ import Profile from './pages/Profile.jsx';
 import Add_info from './pages/Add_info.jsx';
 import Feedback from './pages/FeedBack.jsx';
 import PlaceDetails from './pages/PlaceDetails.jsx';
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
+import OTPVerification from './pages/OTPVerification.jsx';
 const App = () => {
   const [theme, settheme] = useState('light');
 
@@ -26,6 +29,9 @@ const App = () => {
           <Route path="/top-places" element={<TopPlaces theme={theme}/>} />
           <Route path="/login" element={<Login theme={theme}/>} />
           <Route path="/signup" element={<Signup theme={theme}/>} />
+          <Route path="/forgot-password" element={<ForgotPassword theme={theme}/>} />
+          <Route path="/reset-password" element={<ResetPassword theme={theme}/>} />
+          <Route path="/otp-verification" element={<OTPVerification theme={theme}/>} />
           <Route path="/profile" element={<Profile theme={theme} />} />
           <Route path="/add-info" element={<Add_info theme={theme} />}/>
           <Route path="/place/:id" element={<PlaceDetails theme={theme} />} />
