@@ -39,39 +39,7 @@ router.get('/google/callback',
   }
 );
 
-// Facebook OAuth Routes
-router.get('/facebook',
-  passport.authenticate('facebook', { 
-    scope: ['email'] 
-  })
-);
-
-router.get('/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login?error=facebook_auth_failed' }),
-  async (req, res) => {
-    try {
-      // Generate JWT token
-      const token = generateToken(req.user._id);
-      
-      // Redirect to frontend with token and user data
-      const userData = encodeURIComponent(JSON.stringify({
-        _id: req.user._id,
-        firstname: req.user.firstname,
-        lastname: req.user.lastname,
-        email: req.user.email,
-        phone: req.user.phone,
-        role: req.user.role,
-        profilePicture: req.user.profilePicture,
-        authProvider: req.user.authProvider
-      }));
-      
-      res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/?token=${token}&user=${userData}&auth=success`);
-    } catch (error) {
-      console.error('Facebook OAuth callback error:', error);
-      res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=auth_failed`);
-    }
-  }
-);
+// Facebook OAuth Routes - Removed (will be added in future updates)
 
 // Get current user (protected route)
 router.get('/me', async (req, res) => {

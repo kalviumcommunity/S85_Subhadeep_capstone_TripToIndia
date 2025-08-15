@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: function() {
-      return !this.googleId && !this.facebookId; // Password required only if not social login
+      return !this.googleId; // Password required only if not Google login
     },
     minLength: [6, "Password must be at least 6 characters long!"],
   },
@@ -48,20 +48,38 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true // Allows multiple null values
   },
-  facebookId: {
-    type: String,
-    unique: true,
-    sparse: true // Allows multiple null values
-  },
   profilePicture: {
-    type: String, // URL to profile picture from social providers
+    type: String, // URL to profile picture from Google
   },
   authProvider: {
     type: String,
-    enum: ['local', 'google', 'facebook'],
+    enum: ['local', 'google'],
     default: 'local'
   },
   isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  // Password Reset fields
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
+  },
+  // OTP fields
+  otp: {
+    type: String
+  },
+  otpExpires: {
+    type: Date
+  },
+  otpPurpose: {
+    type: String,
+    enum: ['login', 'signup', 'verification'],
+    default: 'verification'
+  },
+  isOtpVerified: {
     type: Boolean,
     default: false
   }

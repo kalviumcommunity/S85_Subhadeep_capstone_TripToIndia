@@ -15,7 +15,6 @@ const EmailIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" className="h-5
 const PhoneIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg> );
 const LockIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg> );
 const Spinner = () => ( <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> );
-const CheckIcon = () => ( <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg> );
 
 
 const Signup = ({ theme }) => {
@@ -28,12 +27,32 @@ const Signup = ({ theme }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [emailChecking, setEmailChecking] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
 
   const handleChange = (e) => {
     setError(null); // Clear error on change
     setFormData({ ...formData, [e.target.id]: e.target.value });
+
+    // Check email availability when email field changes
+    if (e.target.id === 'email' && e.target.value) {
+      checkEmailAvailability(e.target.value);
+    }
+  };
+
+  const checkEmailAvailability = async (email) => {
+    if (!email || !email.includes('@')) return;
+
+    setEmailChecking(true);
+    try {
+      const res = await axios.post(`${BASE_URL}/check-email`, { email });
+      setEmailExists(res.data.exists);
+    } catch (err) {
+      console.error('Email check error:', err);
+    } finally {
+      setEmailChecking(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -51,12 +70,16 @@ const Signup = ({ theme }) => {
       const res = await axios.post(`${BASE_URL}/register`, formData);
       setLoading(false);
 
-      setIsSuccess(true);
-      // alert(res.data.message); // Optional: You can still use an alert if you wish
-
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500); // Navigate after success animation
+      if (res.data.success) {
+        // Navigate to OTP verification page
+        navigate('/otp-verification', {
+          state: {
+            email: formData.email,
+            purpose: 'signup',
+            from: '/'
+          }
+        });
+      }
 
     } catch (err) {
       setLoading(false);
@@ -67,14 +90,13 @@ const Signup = ({ theme }) => {
 
   // Google Signup Handler
   const handleGoogleSignup = () => {
-    const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "https://triptoindia-18.onrender.com";
+    const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
     window.location.href = `${BASE_URL}/api/v1/auth/google`;
   };
 
   // Facebook Signup Handler
   const handleFacebookSignup = () => {
-    const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "https://triptoindia-18.onrender.com";
-    window.location.href = `${BASE_URL}/api/v1/auth/facebook`;
+    alert("🚀 Facebook Signup feature will be added soon! \n\nWe're working on integrating Facebook authentication. For now, please use Google Signup or the regular signup form above.");
   };
 
   const isDark = theme === "dark";
@@ -104,8 +126,39 @@ const Signup = ({ theme }) => {
             </div>
              <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3"><EmailIcon /></span>
-                <input type="email" id="email" required placeholder="Email Address" onChange={handleChange} className={`w-full py-3 pl-10 pr-4 rounded-lg border transition-colors duration-300 ${isDark ? "bg-gray-800 border-gray-700 text-white focus:ring-purple-500" : "bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500"} focus:outline-none focus:ring-2`} />
+                <input type="email" id="email" required placeholder="Email Address" onChange={handleChange} className={`w-full py-3 pl-10 pr-12 rounded-lg border transition-colors duration-300 ${
+                  emailExists
+                    ? 'border-red-500 focus:ring-red-500'
+                    : isDark ? "bg-gray-800 border-gray-700 text-white focus:ring-purple-500" : "bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500"
+                } focus:outline-none focus:ring-2`} />
+                {emailChecking && (
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg className="animate-spin h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                )}
+                {!emailChecking && emailExists && (
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg className="h-4 w-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                )}
+                {!emailChecking && formData.email && !emailExists && (
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
             </div>
+            {emailExists && (
+              <p className="text-sm text-red-500 mt-1">
+                This email is already registered. <a href="/login" className="underline hover:text-red-400">Login instead?</a>
+              </p>
+            )}
              <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3"><PhoneIcon /></span>
                 <input type="text" id="phone" required placeholder="Phone Number" onChange={handleChange} className={`w-full py-3 pl-10 pr-4 rounded-lg border transition-colors duration-300 ${isDark ? "bg-gray-800 border-gray-700 text-white focus:ring-purple-500" : "bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500"} focus:outline-none focus:ring-2`} />
@@ -129,8 +182,12 @@ const Signup = ({ theme }) => {
               </button>
             </div>
 
-            <button disabled={loading || isSuccess} className={`w-full flex justify-center items-center py-3 px-4 border border-transparent text-lg font-semibold rounded-lg text-white transition-all duration-300 disabled:opacity-80 h-[52px] ${isSuccess ? 'bg-green-500' : (isDark ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700')} focus:outline-none focus:ring-2 focus:ring-offset-2 ${isDark ? 'focus:ring-offset-gray-900' : 'focus:ring-offset-white'}`}>
-              {loading ? <Spinner /> : isSuccess ? <CheckIcon /> : "Sign Up"}
+            <button disabled={loading || emailExists || emailChecking} className={`w-full flex justify-center items-center py-3 px-4 border border-transparent text-lg font-semibold rounded-lg text-white transition-all duration-300 disabled:opacity-80 h-[52px] ${
+              emailExists
+                ? 'bg-gray-500 cursor-not-allowed'
+                : (isDark ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700')
+            } focus:outline-none focus:ring-2 focus:ring-offset-2 ${isDark ? 'focus:ring-offset-gray-900' : 'focus:ring-offset-white'}`}>
+              {loading ? <Spinner /> : emailExists ? "Email Already Exists" : "Sign Up"}
             </button>
 
             {error && !isSuccess && ( <p className="text-center text-sm font-medium text-red-500 animate-pulse pt-2">{error}</p> )}
