@@ -14,26 +14,12 @@ dotenv.config({ path: './config/.env' });
 
 const app = express();
 
-// ✅ CORS configuration
-const allowedOrigins = [
-  process.env.FRONTEND_URL?.replace(/\/$/, ""), // Remove trailing slash if any
-  "http://localhost:5173"
-];
-
+// CORS configuration
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked: ${origin} is not allowed`));
-    }
-  },
-  credentials: true
-}));
-
-// Handle preflight requests
-app.options('*', cors({
-  origin: allowedOrigins,
+  origin: [
+    process.env.FRONTEND_URL || 'https://triptoindia.netlify.app',
+    'http://localhost:5173'
+  ],
   credentials: true
 }));
 
