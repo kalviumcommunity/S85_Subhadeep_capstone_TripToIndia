@@ -54,7 +54,7 @@ const ResetPassword = ({ theme }) => {
 
   const verifyToken = async () => {
     try {
-      const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
+      const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
       const res = await axios.get(`${BASE_URL}/verify-reset-token/${token}`);
       
       if (res.data.success) {
@@ -90,7 +90,7 @@ const ResetPassword = ({ theme }) => {
     setError("");
 
     try {
-      const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
+      const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
       
       const res = await axios.post(`${BASE_URL}/reset-password`, {
         token,

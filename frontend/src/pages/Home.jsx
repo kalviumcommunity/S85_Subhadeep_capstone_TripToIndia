@@ -20,7 +20,7 @@ const Home = ({ theme }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef(null);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -61,7 +61,7 @@ const Home = ({ theme }) => {
       }
       try {
         const res = await axios.get(
-          `https://triptoindia-18.onrender.com/api/add/search?q=${searchTerm}`
+          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/search?q=${searchTerm}`
         );
         setSearchResults(res.data);
       } catch (error) {

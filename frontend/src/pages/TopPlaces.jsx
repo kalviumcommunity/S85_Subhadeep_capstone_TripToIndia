@@ -10,7 +10,7 @@ const TopPlaces = ({ theme }) => {
   useEffect(() => {
     const fetchRandomPlaces = async () => {
       try {
-        const res = await axios.get("https://triptoindia-18.onrender.com/api/add/random");
+        const res = await axios.get("https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/random");
         setPlaces(res.data);
       } catch (err) {
         console.error("Error fetching random places", err);

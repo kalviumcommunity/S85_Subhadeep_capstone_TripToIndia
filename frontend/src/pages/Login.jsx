@@ -39,7 +39,7 @@ const Login = ({ theme }) => {
 
     try {
       dispatch(loginStart());
-      const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
+      const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
 
       const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
@@ -84,7 +84,7 @@ const Login = ({ theme }) => {
 
   // Google Login Handler
   const handleGoogleLogin = () => {
-    const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
+    const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com";
 
     // Check if we're in production and OAuth might not be configured
     if (!import.meta.env.DEV) {

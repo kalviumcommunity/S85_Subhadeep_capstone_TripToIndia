@@ -21,7 +21,7 @@ const PlaceDetails = ({ theme }) => {
     const fetchPlace = async () => {
       try {
         const res = await axios.get(
-          `https://triptoindia-18.onrender.com/api/add/places/${id}`
+          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/places/${id}`
         );
         setPlace(res.data);
       } catch (err) {
@@ -55,7 +55,7 @@ const PlaceDetails = ({ theme }) => {
             // Use Geocoding API to convert address to lat/lng
             try {
               const geoRes = await fetch(
-                `https://triptoindia-18.onrender.com/api/geocode?address=${encodeURIComponent(
+                `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/geocode?address=${encodeURIComponent(
                   place.address
                 )}`
               );
