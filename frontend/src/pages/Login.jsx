@@ -85,7 +85,6 @@ const Login = ({ theme }) => {
   // Google Login Handler
   const handleGoogleLogin = () => {
     const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
-// <<<<<<< branch_118
 
     // Check if we're in production and OAuth might not be configured
     if (!import.meta.env.DEV) {
@@ -93,8 +92,6 @@ const Login = ({ theme }) => {
       return;
     }
 
-// =======
-// >>>>>>> main
     window.location.href = `${BASE_URL}/api/v1/auth/google`;
   };
 
@@ -105,9 +102,6 @@ const Login = ({ theme }) => {
 
   const isDark = theme === "dark";
 
-  //==================================================================
-  // --- JSX (UNCHANGED) ---
-  //==================================================================
   return (
     <div className={`w-screen h-screen flex overflow-hidden ${isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"}`}>
       <div className="w-full lg:w-1/2 flex justify-center items-center p-4 lg:p-8 transition-colors duration-500">

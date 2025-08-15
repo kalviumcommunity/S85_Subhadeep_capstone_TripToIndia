@@ -61,7 +61,6 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
@@ -75,6 +74,7 @@ router.post("/register", async (req, res) => {
       role: role || 'user',
       isEmailVerified: true, // Set to true since we're not doing email verification
       isOtpVerified: true,
+      isOtpVerified: true,
       otp,
       otpExpires,
       otpPurpose: 'signup',
@@ -83,7 +83,6 @@ router.post("/register", async (req, res) => {
     });
 
     await newUser.save();
-
     const token = generateToken(newUser._id);
 
     res.status(201).json({
@@ -101,6 +100,73 @@ router.post("/register", async (req, res) => {
         isEmailVerified: newUser.isEmailVerified
       }
     });
+
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// POST: Verify Signup OTP
+router.post("/verify-signup-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and OTP are required!"
+      });
+    }
+
+    // Find user with valid OTP
+    const user = await User.findOne({
+      email,
+      otp,
+      otpExpires: { $gt: Date.now() },
+      otpPurpose: 'signup'
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired OTP!"
+      });
+    }
+
+    // Verify user
+    user.isEmailVerified = true;
+    user.isOtpVerified = true;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.otpPurpose = undefined;
+
+    await user.save();
+
+    // Send welcome email
+    await sendWelcomeEmail(email, user.firstname);
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully! Welcome to TripToIndia!",
+      token,
+      user: {
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        authProvider: user.authProvider,
+        isEmailVerified: user.isEmailVerified
+      }
+    });
+  } catch (error) {
+    console.error("OTP verification error:", error);
+
 
     const emailResult = await sendSignupOTP(email, otp, firstname);
 
@@ -121,9 +187,13 @@ router.post("/register", async (req, res) => {
     }
   } catch (error) {
     console.error("Registration error:", error);
+
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+
+// POST: Login user (Direct Login - No OTP)
 
 router.post("/verify-signup-otp", async (req, res) => {
   try {
@@ -188,6 +258,7 @@ router.post("/verify-signup-otp", async (req, res) => {
 });
 
 
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -233,7 +304,6 @@ router.post("/login", async (req, res) => {
         isEmailVerified: user.isEmailVerified
       },
     });
-
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
@@ -259,7 +329,7 @@ router.post("/login", async (req, res) => {
         message: "Failed to send verification code. Please try again."
       });
     }
-// >>>>>>> main
+
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -381,14 +451,14 @@ router.post("/resend-otp", async (req, res) => {
   }
 });
 
-// <<<<<<< branch_118
+
 // POST: Forgot Password (Disabled - Email service not configured)
 router.post("/forgot-password", async (req, res) => {
   res.status(503).json({
     success: false,
     message: "Password reset feature is temporarily unavailable. Please contact support for assistance."
   });
-// =======
+
 // POST: Forgot Password
 router.post("/forgot-password", async (req, res) => {
   try {
@@ -444,7 +514,7 @@ router.post("/forgot-password", async (req, res) => {
       message: "Server error. Please try again later."
     });
   }
-// >>>>>>> main
+
 });
 
 // POST: Reset Password
@@ -542,3 +612,4 @@ router.get("/verify-reset-token/:token", async (req, res) => {
 });
 
 export default router
+
