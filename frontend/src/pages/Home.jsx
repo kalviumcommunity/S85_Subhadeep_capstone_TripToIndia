@@ -19,10 +19,8 @@ const Home = ({ theme }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef(null);
-
   const navigate = useNavigate();
-
-  // Handle OAuth callback
+  
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
