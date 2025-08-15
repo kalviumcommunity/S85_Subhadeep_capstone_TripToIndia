@@ -8,7 +8,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.NODE_ENV === 'production'
-      ? "https://triptoindia-18.onrender.com/api/v1/auth/google/callback"
+      ? "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/v1/auth/google/callback"
       : "http://localhost:3000/api/v1/auth/google/callback"
   }, async (accessToken, refreshToken, profile, done) => {
   try {

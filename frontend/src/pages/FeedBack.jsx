@@ -5,7 +5,7 @@ import axios from 'axios';
 import InteractiveArt from './InteractiveArt';
 
 // API Base URL
-const BASE_URL = "https://triptoindia-18.onrender.com/api";
+const BASE_URL = "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
 
 // Helper SVG Icons
 const UserIcon = () => (
@@ -67,7 +67,7 @@ const FeedBack = ({ theme }) => {
       }
       try {
         const res = await axios.get(
-          `https://triptoindia-18.onrender.com/api/add/search?q=${searchTerm}`
+          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/search?q=${searchTerm}`
         );
         setSearchResults(res.data);
         setShowDropdown(res.data.length > 0);

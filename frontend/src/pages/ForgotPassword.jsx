@@ -39,7 +39,7 @@ const ForgotPassword = ({ theme }) => {
     setMessage("");
 
     try {
-      const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
+      const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
       
       const res = await axios.post(`${BASE_URL}/forgot-password`, { email });
       

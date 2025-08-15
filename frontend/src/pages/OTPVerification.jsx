@@ -53,7 +53,7 @@ const OTPVerification = ({ theme }) => {
     setError('');
 
     try {
-      const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
+      const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
       
       let endpoint;
       if (purpose === 'login') {
@@ -95,7 +95,7 @@ const OTPVerification = ({ theme }) => {
     setError('');
 
     try {
-      const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
+      const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
       
       await axios.post(`${BASE_URL}/resend-otp`, {
         email,

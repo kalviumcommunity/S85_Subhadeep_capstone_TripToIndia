@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://triptoindia-18.onrender.com',
+        target: 'https://s85-subhadeep-capstone-triptoindia-18.onrender.com',
         changeOrigin: true,
       },
     },

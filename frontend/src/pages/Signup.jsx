@@ -4,10 +4,7 @@ import axios from "axios";
 import InteractiveArt from "./InteractiveArt"; // Make sure this component is in the same folder
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-// ==================================================================
-// --- API & ICONS ---
-// ==================================================================
-const BASE_URL = import.meta.env.MODE === "development" ? "/api" : "https://triptoindia-18.onrender.com/api";
+const BASE_URL = import.meta.env.MODE === "development" ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
 
 // Helper SVG Icons
 const UserIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg> );
@@ -18,9 +15,6 @@ const Spinner = () => ( <svg className="animate-spin h-5 w-5 text-white" xmlns="
 
 
 const Signup = ({ theme }) => {
-  // ==================================================================
-  // --- YOUR LOGIC + UI STATES ---
-  // ==================================================================
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstname: "", lastname: "", email: "", phone: "", password: "", role: "customer"
@@ -90,7 +84,7 @@ const Signup = ({ theme }) => {
 
   // Google Signup Handler
   const handleGoogleSignup = () => {
-    const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
+    const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com";
 
     // Check if we're in production and OAuth might not be configured
     if (!import.meta.env.DEV) {
