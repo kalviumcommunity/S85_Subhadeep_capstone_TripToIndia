@@ -73,9 +73,8 @@ router.post("/register", async (req, res) => {
       phone,
       password: hashedPassword,
       role: role || 'user',
-
       isEmailVerified: true, // Set to true since we're not doing email verification
-      isOtpVerified: true
+      isOtpVerified: true,
       otp,
       otpExpires,
       otpPurpose: 'signup',
