@@ -128,7 +128,7 @@ const FeedBack = ({ theme }) => {
     setShowDropdown(false);
   };
 
-  // Handle input focus to show dropdown if there are results
+  // Handle input focus to show dropdown
   const handleInputFocus = () => {
     if (searchResults.length > 0) {
       setShowDropdown(true);

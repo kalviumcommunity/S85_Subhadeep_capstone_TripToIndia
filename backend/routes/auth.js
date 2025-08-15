@@ -5,12 +5,22 @@ import User from '../models/UserSchema.js';
 
 const router = express.Router();
 
+
+// Google OAuth Routes - Only if credentials are available
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  router.get('/google',
+    passport.authenticate('google', {
+      scope: ['profile', 'email']
+    })
+  );
+
 // Google OAuth Routes
 router.get('/google', 
   passport.authenticate('google', { 
     scope: ['profile', 'email'] 
   })
 );
+
 
 router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/login?error=google_auth_failed' }),
@@ -38,6 +48,21 @@ router.get('/google/callback',
     }
   }
 );
+
+} else {
+  // Fallback routes when Google OAuth is not configured
+  router.get('/google', (req, res) => {
+    res.status(503).json({
+      success: false,
+      message: 'Google OAuth not configured on server'
+    });
+  });
+
+  router.get('/google/callback', (req, res) => {
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_not_configured`);
+  });
+}
+
 
 // Facebook OAuth Routes - Removed (will be added in future updates)
 

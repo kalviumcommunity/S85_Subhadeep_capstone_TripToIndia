@@ -63,7 +63,7 @@ const navigate = useNavigate();
               >
                 Explore the majestic beauty, cultural richness, and hidden gems of India with us.
                 From Himalayan peaks to Goan beaches, we bring you handpicked destinations that
-                match your travel dreams.
+                match your travel dreams. 
               </p>
               <p
                 className={`text-base leading-relaxed ${
@@ -71,12 +71,14 @@ const navigate = useNavigate();
                 }`}
               >
                 Our platform offers trusted guides, curated experiences, and 24/7 support to make
-                your journey smooth and memorable. Let every step in India be full of wonder!
+                your journey smooth and memorable. Let every step in India be full of wonder!  
               </p>
             </div>
             <div className="mt-6 lg:mt-8">
               <button onClick={handleStartJourney} className="bg-[#41A4FF] hover:bg-blue-600 text-white px-6 lg:px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300 transform hover:-translate-y-1">
-                Start Your Journey
+
+              Start Your Journey  
+
               </button>
             </div>
           </div>

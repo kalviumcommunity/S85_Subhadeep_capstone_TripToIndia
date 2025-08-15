@@ -2,12 +2,24 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../models/UserSchema.js';
 
+
+// Google OAuth Strategy - Only initialize if credentials are available
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.NODE_ENV === 'production'
+      ? "https://triptoindia-18.onrender.com/api/v1/auth/google/callback"
+      : "http://localhost:3000/api/v1/auth/google/callback"
+  }, async (accessToken, refreshToken, profile, done) => {
+=======
 // Google OAuth Strategy
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/api/v1/auth/google/callback"
 }, async (accessToken, refreshToken, profile, done) => {
+
   try {
     // Check if user already exists with this Google ID
     let user = await User.findOne({ googleId: profile.id });
@@ -49,7 +61,13 @@ passport.use(new GoogleStrategy({
   } catch (error) {
     return done(error, null);
   }
+
+  }));
+} else {
+  console.log('Google OAuth credentials not found. Google authentication disabled.');
+}
 }));
+
 
 // Facebook OAuth Strategy - Removed (will be added in future updates)
 

@@ -91,6 +91,16 @@ const Signup = ({ theme }) => {
   // Google Signup Handler
   const handleGoogleSignup = () => {
     const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
+// <<<<<<< branch_118
+
+    // Check if we're in production and OAuth might not be configured
+    if (!import.meta.env.DEV) {
+      alert("🚀 Google Signup is being configured for production. Please use email/password signup for now.");
+      return;
+    }
+
+// =======
+// >>>>>>> main
     window.location.href = `${BASE_URL}/api/v1/auth/google`;
   };
 
