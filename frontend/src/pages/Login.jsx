@@ -30,7 +30,7 @@ const Login = ({ theme }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Abort any previous request if user clicks submit again
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -40,7 +40,7 @@ const Login = ({ theme }) => {
     try {
       dispatch(loginStart());
       const BASE_URL = import.meta.env.DEV ? "/api" : "https://triptoindia-18.onrender.com/api";
-      
+
       const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,16 +52,27 @@ const Login = ({ theme }) => {
       if (!res.ok) {
         throw new Error(data.message || `Server responded with ${res.status}`);
       }
-      if (!data.user) {
-        throw new Error("Invalid server response: missing user data");
-      }
 
-      // On success, dispatch the action and trigger the UI animation
-      dispatch(loginSuccess(data.user));
-      setIsSuccess(true);
-      
-      // Navigate after the success animation completes
-      setTimeout(() => navigate("/"), 1500);
+      if (data.success && data.requiresOTP) {
+        // Navigate to OTP verification page for manual login
+        navigate('/otp-verification', {
+          state: {
+            email: formData.email,
+            purpose: 'login',
+            from: '/'
+          }
+        });
+      } else if (data.user) {
+        // Direct login success (for social auth or if OTP is disabled)
+        localStorage.setItem("token", data.token);
+        dispatch(loginSuccess(data.user));
+        setIsSuccess(true);
+
+        // Navigate after the success animation completes
+        setTimeout(() => navigate("/"), 1500);
+      } else {
+        throw new Error("Invalid server response");
+      }
 
     } catch (err) {
       // Only dispatch a failure if the error wasn't from our own AbortController.
@@ -73,14 +84,13 @@ const Login = ({ theme }) => {
 
   // Google Login Handler
   const handleGoogleLogin = () => {
-    const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "https://triptoindia-18.onrender.com";
+    const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://triptoindia-18.onrender.com";
     window.location.href = `${BASE_URL}/api/v1/auth/google`;
   };
 
   // Facebook Login Handler
   const handleFacebookLogin = () => {
-    const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "https://triptoindia-18.onrender.com";
-    window.location.href = `${BASE_URL}/api/v1/auth/facebook`;
+    alert("🚀 Facebook Login feature will be added soon! \n\nWe're working on integrating Facebook authentication. For now, please use Google Login or the regular login form above.");
   };
 
   const isDark = theme === "dark";
@@ -176,7 +186,16 @@ const Login = ({ theme }) => {
             </div>
           </div>
 
-          <p className="text-center text-sm mt-6">
+          <div className="text-center mt-6">
+            <Link
+              to="/forgot-password"
+              className={`text-sm font-medium transition-colors duration-300 ${isDark ? 'text-purple-400 hover:text-purple-300' : 'text-blue-600 hover:text-blue-500'}`}
+            >
+              Forgot your password?
+            </Link>
+          </div>
+
+          <p className="text-center text-sm mt-4">
             Don't have an account?{' '}
             <Link to="/signup" className={`font-medium transition-colors duration-300 ${isDark ? 'text-purple-400 hover:text-purple-300' : 'text-blue-600 hover:text-blue-500'}`}>Sign up</Link>
           </p>
