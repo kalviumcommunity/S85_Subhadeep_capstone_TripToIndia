@@ -32,7 +32,6 @@ router.post("/check-email", async (req, res) => {
   }
 });
 
-// POST: Register User (Direct Registration - No OTP)
 router.post("/register", async (req, res) => {
   try {
     const { firstname, lastname, email, phone, password, role } = req.body;
@@ -62,7 +61,10 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user (verified by default since no email verification)
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+
     const newUser = new User({
       firstname,
       lastname,
@@ -71,12 +73,16 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role: role || 'user',
       isEmailVerified: true, // Set to true since we're not doing email verification
-      isOtpVerified: true
+      isOtpVerified: true,
+      isOtpVerified: true,
+      otp,
+      otpExpires,
+      otpPurpose: 'signup',
+      isEmailVerified: false,
+      isOtpVerified: false
     });
 
     await newUser.save();
-
-    // Generate JWT token for immediate login
     const token = generateToken(newUser._id);
 
     res.status(201).json({
@@ -94,6 +100,7 @@ router.post("/register", async (req, res) => {
         isEmailVerified: newUser.isEmailVerified
       }
     });
+
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -159,11 +166,99 @@ router.post("/verify-signup-otp", async (req, res) => {
     });
   } catch (error) {
     console.error("OTP verification error:", error);
+
+
+    const emailResult = await sendSignupOTP(email, otp, firstname);
+
+    if (emailResult.success) {
+      res.status(201).json({
+        success: true,
+        message: "Registration initiated! Please check your email for verification code.",
+        userId: newUser._id,
+        email: email
+      });
+    } else {
+      // Remove user if email failed
+      await User.findByIdAndDelete(newUser._id);
+      res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again."
+      });
+    }
+  } catch (error) {
+    console.error("Registration error:", error);
+
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
+
 // POST: Login user (Direct Login - No OTP)
+
+router.post("/verify-signup-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and OTP are required!"
+      });
+    }
+
+    // Find user with valid OTP
+    const user = await User.findOne({
+      email,
+      otp,
+      otpExpires: { $gt: Date.now() },
+      otpPurpose: 'signup'
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired OTP!"
+      });
+    }
+
+    // Verify user
+    user.isEmailVerified = true;
+    user.isOtpVerified = true;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.otpPurpose = undefined;
+
+    await user.save();
+
+    // Send welcome email
+    await sendWelcomeEmail(email, user.firstname);
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully! Welcome to TripToIndia!",
+      token,
+      user: {
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        authProvider: user.authProvider,
+        isEmailVerified: user.isEmailVerified
+      }
+    });
+  } catch (error) {
+    console.error("OTP verification error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -190,7 +285,6 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
     }
 
-    // Generate JWT token for immediate login
     const token = generateToken(user._id);
 
     // Success - Direct login
@@ -210,6 +304,32 @@ router.post("/login", async (req, res) => {
         isEmailVerified: user.isEmailVerified
       },
     });
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Save OTP to user
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    user.otpPurpose = 'login';
+    await user.save();
+
+    // Send OTP email
+    const emailResult = await sendLoginOTP(email, otp, user.firstname);
+
+    if (emailResult.success) {
+      res.status(200).json({
+        success: true,
+        message: "Credentials verified! Please check your email for the verification code.",
+        requiresOTP: true,
+        email: email
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to send verification code. Please try again."
+      });
+    }
+
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -331,12 +451,70 @@ router.post("/resend-otp", async (req, res) => {
   }
 });
 
+
 // POST: Forgot Password (Disabled - Email service not configured)
 router.post("/forgot-password", async (req, res) => {
   res.status(503).json({
     success: false,
     message: "Password reset feature is temporarily unavailable. Please contact support for assistance."
   });
+
+// POST: Forgot Password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required!"
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found with this email address!"
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    // Set token and expiration (1 hour)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+    await user.save();
+
+    // Send password reset email
+    const emailResult = await sendPasswordResetEmail(
+      email,
+      resetToken,
+      user.firstname
+    );
+
+    if (emailResult.success) {
+      res.status(200).json({
+        success: true,
+        message: "Password reset email sent successfully! Please check your inbox."
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to send password reset email. Please try again."
+      });
+    }
+
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later."
+    });
+  }
+
 });
 
 // POST: Reset Password
@@ -434,3 +612,4 @@ router.get("/verify-reset-token/:token", async (req, res) => {
 });
 
 export default router
+
