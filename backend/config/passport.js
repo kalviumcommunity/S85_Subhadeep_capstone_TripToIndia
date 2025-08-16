@@ -10,12 +10,14 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   console.log('🌍 NODE_ENV type:', typeof process.env.NODE_ENV);
   console.log('🌍 NODE_ENV === "production":', process.env.NODE_ENV === 'production');
 
-  // Proper environment-based callback URL
+  // Environment-based callback URL for deployment
   const callbackURL = process.env.NODE_ENV === 'production'
     ? "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/v1/auth/google/callback"
     : "http://localhost:3000/api/v1/auth/google/callback";
 
-  console.log('📍 Using callback URL:', callbackURL);
+  console.log('� Using callback URL:', callbackURL);
+
+
 
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
