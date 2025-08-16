@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/user/userSlice.js";
 import axios from "axios";
 import InteractiveArt from "./InteractiveArt"; // Make sure this component is in the same folder
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -16,6 +18,7 @@ const Spinner = () => ( <svg className="animate-spin h-5 w-5 text-white" xmlns="
 
 const Signup = ({ theme }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     firstname: "", lastname: "", email: "", phone: "", password: "", role: "customer"
   });
@@ -24,6 +27,12 @@ const Signup = ({ theme }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailChecking, setEmailChecking] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
+
+  // Ensure clean state on component mount (fixes mobile issues)
+  useEffect(() => {
+    setLoading(false);
+    setError(null);
+  }, []);
 
   const handleChange = (e) => {
     setError(null); // Clear error on change
@@ -53,32 +62,76 @@ const Signup = ({ theme }) => {
     e.preventDefault();
     setError(null);
 
+    // Validate all required fields
+    if (!formData.firstname || !formData.lastname || !formData.email || !formData.phone || !formData.password) {
+      setError("All fields are required!");
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address!");
+      return;
+    }
+
+    // Validate phone number (basic validation)
+    const phoneRegex = /^[0-9]{10,15}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
+      setError("Please enter a valid phone number (10-15 digits)!");
+      return;
+    }
+
+    // Validate password strength
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
     if (!passwordRegex.test(formData.password)) {
       setError("Password must be 6+ chars with uppercase, lowercase, number, and special character.");
       return;
     }
 
+    // Check if email already exists
+    if (emailExists) {
+      setError("This email is already registered. Please use a different email or login instead.");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axios.post(`${BASE_URL}/register`, formData);
-      setLoading(false);
 
       if (res.data.success) {
-        // Navigate to OTP verification page
-        navigate('/otp-verification', {
-          state: {
-            email: formData.email,
-            purpose: 'signup',
-            from: '/'
-          }
-        });
+        setLoading(false);
+
+        // Check if this is OTP-based registration or direct registration
+        if (res.data.requiresOTP || res.data.userId) {
+          // OTP-based registration - navigate to verification
+          navigate('/otp-verification', {
+            state: {
+              email: formData.email,
+              purpose: 'signup',
+              from: '/'
+            }
+          });
+        } else if (res.data.token && res.data.user) {
+          // Direct registration - user is already logged in
+          localStorage.setItem("token", res.data.token);
+          dispatch(loginSuccess(res.data.user));
+          alert(`Welcome to TripToIndia, ${res.data.user.firstname}! Your account has been created successfully.`);
+          navigate('/');
+        } else {
+          // Fallback - show success message and redirect to login
+          alert("Registration successful! Please login to continue.");
+          navigate('/login');
+        }
+      } else {
+        setLoading(false);
+        setError(res.data.message || "Registration failed. Please try again.");
       }
 
     } catch (err) {
       setLoading(false);
       setError(err.response?.data?.message || "Registration failed. Please try again.");
-      console.log(err);
+      console.error("Signup error:", err);
     }
   };
 
