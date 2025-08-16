@@ -207,7 +207,8 @@ const Home = ({ theme }) => {
                   <img
                     src={heroImg}
                     alt=""
-                    className="w-full h-[350px] rounded-2xl border border-orange-500 object-cover transition-transform duration-300 hover:scale-105"
+                    className="rounded-2xl border border-orange-500 object-cover transition-transform duration-300 hover:scale-105"
+                    style={{ width: '200px', height: '350px' }}
                   />
                 </div>
               </div>
@@ -227,7 +228,8 @@ const Home = ({ theme }) => {
                   <img
                     src={heroImg02}
                     alt=""
-                    className="w-full h-[350px] transition-transform duration-300 hover:scale-105 rounded-2xl border border-orange-500 object-cover"
+                    className="transition-transform duration-300 hover:scale-105 rounded-2xl border border-orange-500 object-cover"
+                    style={{ width: '200px', height: '350px' }}
                   />
                 </div>
               </div>
@@ -443,94 +445,48 @@ const Home = ({ theme }) => {
       </div>
 
       {/* Footer Section */}
-      <div className="w-full">
-        <footer
-          className={`w-screen py-6 ${
-            isDark
-              ? "bg-[#111] border-gray-700 text-gray-300"
-              : "bg-white border-gray-300 text-gray-700"
-          }`}
-        >
-          <div className=" w-full max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold text-blue-500 mb-4">
-                TripToIndia
-              </h3>
-              <p className="text-sm leading-relaxed">
-                Discover incredible destinations, plan your adventures, and make
-                memories that last a lifetime.
+      <footer
+        className={`w-screen py-6 ${
+          isDark
+            ? "bg-gradient-to-r from-gray-900 to-gray-800 text-gray-100"
+            : "bg-gradient-to-r from-gray-800 to-gray-900 text-gray-100"
+        }`}
+      >
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+          {/* Compact Footer Content */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+
+            {/* Brand and Description */}
+            <div className="text-center md:text-left">
+              <h3 className="text-xl font-bold text-white mb-2">TripToIndia</h3>
+              <p className="text-gray-300 text-sm max-w-md">
+                Discover incredible destinations and make memories that last a lifetime.
               </p>
             </div>
 
-            <div>
-              <h4 className="text-lg font-semibold mb-3 text-pink-500">
-                Quick Links
-              </h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="/" className="hover:text-blue-500 transition">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="/about" className="hover:text-blue-500 transition">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="/top-places"
-                    className="hover:text-blue-500 transition"
-                  >
-                    Top Places
-                  </a>
-                </li>
-                <li>
-                  <a href="/contact" className="hover:text-blue-500 transition">
-                    Contact
-                  </a>
-                </li>
-              </ul>
+            {/* Quick Links */}
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <a href="/" className="text-gray-300 hover:text-white transition-colors duration-300">Home</a>
+              <a href="/about" className="text-gray-300 hover:text-white transition-colors duration-300">About</a>
+              <a href="/top-places" className="text-gray-300 hover:text-white transition-colors duration-300">Top Places</a>
+              <a href="/contact" className="text-gray-300 hover:text-white transition-colors duration-300">Contact</a>
             </div>
 
-            <div>
-              <h4 className="text-lg font-semibold mb-3 text-pink-500">
-                Support
-              </h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Terms & Conditions
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-3 text-pink-500">
-                Contact
-              </h4>
-              <p className="text-sm">📍 India</p>
-              <p className="text-sm">📞 +91 7001293796</p>
-              <p className="text-sm">✉️ subhadeepsamanta1535@gmail.com</p>
+            {/* Contact Info */}
+            <div className="text-center md:text-right text-sm text-gray-300">
+              <p>📞 +91 7001293796</p>
+              <p>✉️ subhadeepsamanta1535@gmail.com</p>
             </div>
           </div>
 
-          <div className="text-center py-4 border-t border-gray-600 text-sm">
-            © {new Date().getFullYear()} TripToIndia. All rights reserved.
+          {/* Bottom Copyright */}
+          <div className="mt-6 pt-4 border-t border-gray-700 text-center">
+            <p className="text-gray-400 text-sm">
+              © {new Date().getFullYear()} TripToIndia. All rights reserved. Made with ❤️ in India
+            </p>
           </div>
+        </div>
         </footer>
-      </div>
     </>
   );
 };

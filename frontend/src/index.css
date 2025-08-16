@@ -119,6 +119,67 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 6. Enhanced Masonry Gallery Styles */
+.masonry__img {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.masonry__img:hover {
+  filter: brightness(1.1) contrast(1.05);
+}
+
+/* Mobile-specific gallery optimizations */
+@media (max-width: 768px) {
+  /* Ensure proper spacing on mobile */
+  .masonry__img {
+    border-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Ensure proper touch targets on mobile */
+  .group {
+    min-height: 120px;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Optimize masonry container for mobile */
+  [data-masonry] {
+    column-gap: 0.5rem !important;
+  }
+}
+
+/* Ensure masonry images are responsive */
+.masonry__img,
+img[src] {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Fix for masonry layout on mobile */
+@media (max-width: 600px) {
+  /* Force single column on small mobile */
+  [data-masonry] {
+    column-count: 1 !important;
+    column-gap: 0 !important;
+  }
+
+  .group {
+    width: 100% !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Footer gradient animations */
+@keyframes footer-glow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.2; }
+}
+
+.footer-bg-element {
+  animation: footer-glow 4s ease-in-out infinite;
+}
+
 /* 3. Keyframes for the form's fade-in and scale-up entry animation.
 */
 @keyframes fade-in-scale {
