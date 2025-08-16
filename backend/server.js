@@ -8,7 +8,6 @@ import geocodeRouter from "./routes/geocodeRouter.js";
 import authRouter from "./routes/auth.js";
 import passport from "./config/passport.js";
 import session from "express-session";
-import MongoStore from "connect-mongo";
 
 // Load environment variables
 dotenv.config({ path: './config/.env' });
@@ -33,14 +32,12 @@ app.use(cors({
 app.use(express.json());
 
 // Session configuration for passport
+// Note: Using MemoryStore for simplicity. In production with multiple instances,
+// consider using a proper session store like Redis or MongoDB
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/triptoindia',
-    touchAfter: 24 * 3600 // lazy session update
-  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 5 * 60 * 60 * 1000, // 5 hours
