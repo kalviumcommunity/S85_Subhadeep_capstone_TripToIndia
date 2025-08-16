@@ -129,8 +129,14 @@ const Login = ({ theme }) => {
   const handleGoogleLogin = () => {
     const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com";
 
-    // Check if we're in production and OAuth might not be configured
-    if (!import.meta.env.DEV) {
+    console.log('🔧 Environment check:', {
+      DEV: import.meta.env.DEV,
+      MODE: import.meta.env.MODE,
+      BASE_URL: BASE_URL
+    });
+
+    // Only block in actual production deployment, not local development
+    if (import.meta.env.MODE === 'production' && !window.location.hostname.includes('localhost')) {
       alert("🚀 Google Login is being configured for production. Please use email/password login for now.");
       return;
     }

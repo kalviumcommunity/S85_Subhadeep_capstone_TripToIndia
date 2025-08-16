@@ -5,11 +5,26 @@ import User from '../models/UserSchema.js';
 
 const router = express.Router();
 
+// Test route to verify auth routes are working
+router.get('/test', (req, res) => {
+  res.json({
+    message: 'Auth routes are working!',
+    googleConfigured: !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+    callbackURL: 'http://localhost:3000/auth/google/callback',
+    currentURL: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Google OAuth Routes - Only if credentials are available
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  console.log('✅ Google OAuth routes are being registered');
+
   router.get('/google',
     passport.authenticate('google', {
-      scope: ['profile', 'email']
+      scope: ['profile', 'email'],
+      accessType: 'offline',
+      prompt: 'consent'
     })
   );
 
