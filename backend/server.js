@@ -12,6 +12,12 @@ import session from "express-session";
 // Load environment variables
 dotenv.config({ path: './config/.env' });
 
+// Debug environment variables
+console.log('🌍 Environment Variables Debug:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+console.log('Google Client ID exists:', !!process.env.GOOGLE_CLIENT_ID);
+
 const app = express();
 
 // CORS configuration
