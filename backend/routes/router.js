@@ -32,7 +32,7 @@ router.post("/check-email", async (req, res) => {
   }
 });
 
-// POST: Register User (Direct Registration - No OTP)
+// POST: Register User (OTP-Based Registration)
 router.post("/register", async (req, res) => {
   try {
     const { firstname, lastname, email, phone, password, role } = req.body;
@@ -62,7 +62,11 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user (verified by default since no email verification)
+    // Generate OTP
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Create new user (unverified until OTP verification)
     const newUser = new User({
       firstname,
       lastname,
@@ -70,30 +74,33 @@ router.post("/register", async (req, res) => {
       phone,
       password: hashedPassword,
       role: role || 'user',
-      isEmailVerified: true, // Set to true since we're not doing email verification
-      isOtpVerified: true
+      isEmailVerified: false, // Will be verified after OTP
+      isOtpVerified: false,
+      otp: otp,
+      otpExpires: otpExpires,
+      otpPurpose: 'signup'
     });
 
     await newUser.save();
 
-    // Generate JWT token for immediate login
-    const token = generateToken(newUser._id);
+    // Send signup OTP email
+    const emailResult = await sendSignupOTP(email, otp, firstname);
 
-    res.status(201).json({
-      success: true,
-      message: "Registration successful! Welcome to TripToIndia!",
-      token,
-      user: {
-        _id: newUser._id,
-        firstname: newUser.firstname,
-        lastname: newUser.lastname,
-        email: newUser.email,
-        phone: newUser.phone,
-        role: newUser.role,
-        authProvider: newUser.authProvider,
-        isEmailVerified: newUser.isEmailVerified
-      }
-    });
+    if (emailResult && emailResult.success) {
+      res.status(201).json({
+        success: true,
+        requiresOTP: true,
+        userId: newUser._id,
+        message: "Registration initiated! Please check your email for verification code."
+      });
+    } else {
+      // If email fails, delete the user and return error
+      await User.findByIdAndDelete(newUser._id);
+      res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again."
+      });
+    }
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -163,7 +170,7 @@ router.post("/verify-signup-otp", async (req, res) => {
   }
 });
 
-// POST: Login user (Direct Login - No OTP)
+// POST: Login user (OTP-Based Login)
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -190,26 +197,31 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
     }
 
-    // Generate JWT token for immediate login
-    const token = generateToken(user._id);
+    // Generate OTP for login verification
+    const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Success - Direct login
-    res.status(200).json({
-      success: true,
-      message: "Login successful!",
-      token,
-      user: {
-        _id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        authProvider: user.authProvider,
-        profilePicture: user.profilePicture,
-        isEmailVerified: user.isEmailVerified
-      },
-    });
+    // Update user with OTP
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    user.otpPurpose = 'login';
+    await user.save();
+
+    // Send login OTP email
+    const emailResult = await sendLoginOTP(email, otp, user.firstname);
+
+    if (emailResult && emailResult.success) {
+      res.status(200).json({
+        success: true,
+        requiresOTP: true,
+        message: "Please check your email for verification code to complete login."
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Failed to send verification code. Please try again."
+      });
+    }
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: error.message });
