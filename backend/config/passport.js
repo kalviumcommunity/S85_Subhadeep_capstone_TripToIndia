@@ -6,7 +6,11 @@ import User from '../models/UserSchema.js';
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   console.log('🔧 Configuring Google OAuth for:', process.env.NODE_ENV || 'development');
   console.log('🔑 Google Client ID:', process.env.GOOGLE_CLIENT_ID.substring(0, 20) + '...');
+  console.log('🌍 NODE_ENV value:', process.env.NODE_ENV);
+  console.log('🌍 NODE_ENV type:', typeof process.env.NODE_ENV);
+  console.log('🌍 NODE_ENV === "production":', process.env.NODE_ENV === 'production');
 
+  // Proper environment-based callback URL
   const callbackURL = process.env.NODE_ENV === 'production'
     ? "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/v1/auth/google/callback"
     : "http://localhost:3000/api/v1/auth/google/callback";
