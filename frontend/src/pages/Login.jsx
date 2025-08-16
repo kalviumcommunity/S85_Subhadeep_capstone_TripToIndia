@@ -129,18 +129,7 @@ const Login = ({ theme }) => {
   const handleGoogleLogin = () => {
     const BASE_URL = import.meta.env.DEV ? "http://localhost:3000" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com";
 
-    console.log('🔧 Environment check:', {
-      DEV: import.meta.env.DEV,
-      MODE: import.meta.env.MODE,
-      BASE_URL: BASE_URL
-    });
-
-    // Only block in actual production deployment, not local development
-    if (import.meta.env.MODE === 'production' && !window.location.hostname.includes('localhost')) {
-      alert("🚀 Google Login is being configured for production. Please use email/password login for now.");
-      return;
-    }
-
+    // Always allow Google login in development (localhost)
     window.location.href = `${BASE_URL}/api/v1/auth/google`;
   };
 
@@ -205,7 +194,14 @@ const Login = ({ theme }) => {
               {/* Google Login */}
               <button
                 type="button"
-                onClick={handleGoogleLogin}
+                onClick={() => {
+                  console.log('🚀 DIRECT Google OAuth Login - No Alert Function');
+                  const url = import.meta.env.DEV
+                    ? "http://localhost:3000/api/v1/auth/google"
+                    : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/v1/auth/google";
+                  console.log('Redirecting to:', url);
+                  window.location.href = url;
+                }}
                 className={`w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium transition-colors duration-200 ${
                   isDark
                     ? 'bg-gray-800 text-white border-gray-600 hover:bg-gray-700'
