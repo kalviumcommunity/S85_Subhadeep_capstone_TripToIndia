@@ -2,6 +2,10 @@ import nodemailer from 'nodemailer';
 
 // Create email transporter
 const createTransporter = () => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error('Email credentials not configured');
+  }
+
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -14,10 +18,26 @@ const createTransporter = () => {
 // Send password reset email
 export const sendPasswordResetEmail = async (email, resetToken, userName) => {
   try {
+    // Check if email is properly configured
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'your-16-character-app-password-here') {
+      // Mock email service for development
+      console.log('📧 MOCK EMAIL SERVICE - Password Reset');
+      console.log('To:', email);
+      console.log('Subject: Password Reset Request - TripToIndia');
+      console.log('Reset URL:', `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`);
+      console.log('User:', userName);
+      console.log('Token:', resetToken);
+
+      return {
+        success: true,
+        message: 'Password reset email sent successfully (mock mode)'
+      };
+    }
+
     const transporter = createTransporter();
-    
+
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-    
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -87,6 +107,20 @@ export const sendPasswordResetEmail = async (email, resetToken, userName) => {
 // Send password reset confirmation email
 export const sendPasswordResetConfirmation = async (email, userName) => {
   try {
+    // Check if email is properly configured
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'your-16-character-app-password-here') {
+      // Mock email service for development
+      console.log('📧 MOCK EMAIL SERVICE - Password Reset Confirmation');
+      console.log('To:', email);
+      console.log('Subject: Password Reset Successful - TripToIndia');
+      console.log('User:', userName);
+
+      return {
+        success: true,
+        message: 'Password reset confirmation email sent (mock mode)'
+      };
+    }
+
     const transporter = createTransporter();
     
     const mailOptions = {

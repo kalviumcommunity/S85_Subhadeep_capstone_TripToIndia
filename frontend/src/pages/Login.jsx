@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginStart, loginSuccess, loginFailure } from "../redux/user/userSlice.js";
+import { loginStart, loginSuccess, loginFailure, clearLoading } from "../redux/user/userSlice.js";
 import InteractiveArt from "./InteractiveArt";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
@@ -13,13 +13,46 @@ const CheckIcon = () => ( <svg className="h-7 w-7 text-white" fill="none" viewBo
 const Login = ({ theme }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading: reduxLoading, error } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isSuccess, setIsSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
+
+  // Use local loading as fallback for mobile issues
+  const loading = localLoading || reduxLoading;
+
+  // Debug log for mobile issues (remove in production)
+  useEffect(() => {
+    if (reduxLoading && !localLoading) {
+      console.log('Redux loading stuck on mobile:', { reduxLoading, localLoading });
+    }
+  }, [reduxLoading, localLoading]);
 
   const abortControllerRef = useRef(null);
 
+  // Clear loading state when component mounts (fixes mobile loading issue)
+  useEffect(() => {
+    // Force clear both Redux and local loading state on mount
+    dispatch(clearLoading());
+    setLocalLoading(false);
+
+    // Additional mobile browser fixes
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+      // Extra cleanup for mobile browsers
+      setTimeout(() => {
+        dispatch(clearLoading());
+        setLocalLoading(false);
+      }, 100);
+    }
+
+    // Cleanup on unmount
+    return () => {
+      dispatch(clearLoading());
+      setLocalLoading(false);
+    };
+  }, [dispatch]);
 
   const handleChange = (e) => {
     if (error) {
@@ -38,7 +71,10 @@ const Login = ({ theme }) => {
     abortControllerRef.current = new AbortController();
 
     try {
+      // Set both Redux and local loading states
       dispatch(loginStart());
+      setLocalLoading(true);
+
       const BASE_URL = import.meta.env.DEV ? "/api" : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api";
 
       const res = await fetch(`${BASE_URL}/login`, {
@@ -54,6 +90,10 @@ const Login = ({ theme }) => {
       }
 
       if (data.success && data.requiresOTP) {
+        // Clear both loading states before navigation
+        dispatch(clearLoading());
+        setLocalLoading(false);
+
         // Navigate to OTP verification page for manual login
         navigate('/otp-verification', {
           state: {
@@ -75,6 +115,9 @@ const Login = ({ theme }) => {
       }
 
     } catch (err) {
+      // Clear local loading state and handle error
+      setLocalLoading(false);
+
       // Only dispatch a failure if the error wasn't from our own AbortController.
       if (err.name !== 'AbortError') {
         dispatch(loginFailure(err.message || "Login failed. Please try again."));

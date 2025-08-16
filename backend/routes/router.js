@@ -183,6 +183,8 @@ router.post("/login", async (req, res) => {
         message: `This account is linked with ${user.authProvider}. Please use ${user.authProvider} login.`
       });
     }
+
+    // 🔐 Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Invalid email or password!" });
@@ -328,12 +330,65 @@ router.post("/resend-otp", async (req, res) => {
   }
 });
 
-// POST: Forgot Password (Disabled - Email service not configured)
+// POST: Forgot Password
 router.post("/forgot-password", async (req, res) => {
-  res.status(503).json({
-    success: false,
-    message: "Password reset feature is temporarily unavailable. Please contact support for assistance."
-  });
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required!"
+      });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found with this email address!"
+      });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    // Save reset token to user
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = resetTokenExpires;
+    await user.save();
+
+    // Send password reset email
+    try {
+      const emailResult = await sendPasswordResetEmail(email, resetToken, user.firstname);
+
+      if (emailResult.success) {
+        res.status(200).json({
+          success: true,
+          message: "Password reset link sent to your email!"
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: "Failed to send password reset email. Please try again."
+        });
+      }
+    } catch (emailError) {
+      console.error("Email service error:", emailError);
+      res.status(500).json({
+        success: false,
+        message: "Email service is not configured. Please contact support."
+      });
+    }
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later."
+    });
+  }
 });
 
 // POST: Reset Password
@@ -426,6 +481,29 @@ router.get("/verify-reset-token/:token", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error. Please try again later."
+    });
+  }
+});
+
+// Test route for email service
+router.get("/test-email", async (req, res) => {
+  try {
+    const testResult = await sendPasswordResetEmail(
+      "test@example.com",
+      "test-token-123",
+      "Test User"
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Email test completed",
+      result: testResult
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Email test failed",
+      error: error.message
     });
   }
 });
