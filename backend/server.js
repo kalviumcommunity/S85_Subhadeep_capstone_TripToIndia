@@ -8,6 +8,7 @@ import geocodeRouter from "./routes/geocodeRouter.js";
 import authRouter from "./routes/auth.js";
 import passport from "./config/passport.js";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 
 // Load environment variables
 dotenv.config({ path: './config/.env' });
@@ -36,10 +37,17 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/triptoindia',
+    touchAfter: 24 * 3600 // lazy session update
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 5 * 60 * 60 * 1000 // 5 hours
-  }
+    maxAge: 5 * 60 * 60 * 1000, // 5 hours
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  },
+  name: 'sessionId'
 }));
 
 // Initialize passport
