@@ -2,8 +2,8 @@ import nodemailer from 'nodemailer';
 
 // Create email transporter
 const createTransporter = () => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('Email credentials not configured');
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'your-16-character-app-password-here') {
+    return null; // Return null instead of throwing error
   }
 
   return nodemailer.createTransport({
@@ -35,6 +35,17 @@ export const sendPasswordResetEmail = async (email, resetToken, userName) => {
     }
 
     const transporter = createTransporter();
+
+    // If transporter is null, it means credentials are not configured
+    if (!transporter) {
+      console.log('📧 MOCK EMAIL SERVICE - Password Reset (Fallback)');
+      console.log('To:', email);
+      console.log('Reset URL:', `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`);
+      return {
+        success: true,
+        message: 'Password reset email sent successfully (mock mode)'
+      };
+    }
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
@@ -122,7 +133,18 @@ export const sendPasswordResetConfirmation = async (email, userName) => {
     }
 
     const transporter = createTransporter();
-    
+
+    // If transporter is null, it means credentials are not configured
+    if (!transporter) {
+      console.log('📧 MOCK EMAIL SERVICE - Password Reset Confirmation (Fallback)');
+      console.log('To:', email);
+      console.log('Subject: Password Reset Successful - TripToIndia');
+      return {
+        success: true,
+        message: 'Password reset confirmation email sent (mock mode)'
+      };
+    }
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
