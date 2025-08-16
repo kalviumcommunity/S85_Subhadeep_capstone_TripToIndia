@@ -26,17 +26,30 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     scope: ['profile', 'email']
   }, async (accessToken, refreshToken, profile, done) => {
   try {
+    console.log('🔍 Google OAuth Strategy - Processing user:', profile.emails[0].value);
+
+    // Validate profile data
+    if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+      console.error('❌ No email found in Google profile');
+      return done(new Error('No email found in Google profile'), null);
+    }
+
+    const email = profile.emails[0].value;
+    console.log('📧 Processing email:', email);
+
     // Check if user already exists with this Google ID
     let user = await User.findOne({ googleId: profile.id });
-    
+
     if (user) {
+      console.log('✅ Found existing user with Google ID:', user.email);
       return done(null, user);
     }
-    
+
     // Check if user exists with same email
-    user = await User.findOne({ email: profile.emails[0].value });
-    
+    user = await User.findOne({ email: email });
+
     if (user) {
+      console.log('🔗 Linking Google account to existing user:', email);
       // Link Google account to existing user
       user.googleId = profile.id;
       user.authProvider = 'google';
@@ -45,25 +58,39 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         user.profilePicture = profile.photos[0].value;
       }
       await user.save();
+      console.log('✅ Successfully linked Google account');
       return done(null, user);
     }
-    
+
     // Create new user
+    console.log('👤 Creating new user for:', email);
     const newUser = new User({
       googleId: profile.id,
-      firstname: profile.name.givenName,
-      lastname: profile.name.familyName,
-      email: profile.emails[0].value,
+      firstname: profile.name?.givenName || 'User',
+      lastname: profile.name?.familyName || '',
+      email: email,
       phone: '', // Will be updated later if needed
       authProvider: 'google',
       isEmailVerified: true,
+      isOtpVerified: true,
       profilePicture: profile.photos && profile.photos[0] ? profile.photos[0].value : '',
-      role: 'user'
+      role: 'customer'
     });
-    
+
     await newUser.save();
+    console.log('✅ Successfully created new user:', newUser.email);
     return done(null, newUser);
   } catch (error) {
+    console.error('❌ Google OAuth Strategy Error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      profile: profile ? {
+        id: profile.id,
+        email: profile.emails?.[0]?.value,
+        name: profile.name
+      } : 'No profile'
+    });
     return done(error, null);
   }
   }));
