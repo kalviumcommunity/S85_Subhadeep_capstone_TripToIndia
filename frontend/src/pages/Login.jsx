@@ -194,7 +194,14 @@ const Login = ({ theme }) => {
               {/* Google Login */}
               <button
                 type="button"
-                onClick={handleGoogleLogin}
+                onClick={() => {
+                  console.log('🚀 DIRECT Google OAuth Login - No Alert Function');
+                  const url = import.meta.env.DEV
+                    ? "http://localhost:3000/api/v1/auth/google"
+                    : "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/v1/auth/google";
+                  console.log('Redirecting to:', url);
+                  window.location.href = url;
+                }}
                 className={`w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium transition-colors duration-200 ${
                   isDark
                     ? 'bg-gray-800 text-white border-gray-600 hover:bg-gray-700'
