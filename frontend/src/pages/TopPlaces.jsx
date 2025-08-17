@@ -15,7 +15,7 @@ const TopPlaces = ({ theme }) => {
     const fetchRandomPlaces = async () => {
       try {
         const res = await axios.get(
-          "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/random"
+          "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/places/random"
         );
         setPlaces(res.data);
       } catch (err) {
