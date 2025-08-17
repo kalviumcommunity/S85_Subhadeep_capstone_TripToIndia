@@ -54,6 +54,16 @@ router.get('/debug-callback', async (req, res) => {
   }
 });
 
+// Simple test route for callback debugging
+router.get('/callback-test', (req, res) => {
+  console.log('🧪 Callback test route hit');
+  res.json({
+    success: true,
+    message: 'Callback test route working',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Google OAuth Routes - Only if credentials are available
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   console.log('✅ Google OAuth routes are being registered');
@@ -66,74 +76,20 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     })
   );
 
-  router.get('/google/callback', (req, res, next) => {
-    console.log('🔄 Google OAuth callback route hit');
+  // Simple callback route for debugging
+  router.get('/google/callback', (req, res) => {
+    console.log('🔄 SIMPLE Google OAuth callback route hit');
     console.log('📍 Request URL:', req.url);
     console.log('📍 Query params:', req.query);
 
-    passport.authenticate('google', {
-      failureRedirect: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=google_auth_failed`
-    })(req, res, next);
-  }, async (req, res) => {
-    try {
-      console.log('🔄 Google OAuth callback - Processing user:', req.user?.email);
-      console.log('👤 Full user object:', JSON.stringify(req.user, null, 2));
-
-      // Validate user object
-      if (!req.user) {
-        console.error('❌ No user object found in request');
-        return res.status(500).json({ error: 'No user object found' });
-      }
-
-      if (!req.user._id) {
-        console.error('❌ No user ID found');
-        console.error('User object keys:', Object.keys(req.user));
-        return res.status(500).json({ error: 'No user ID found', user: req.user });
-      }
-
-      console.log('🔑 Generating JWT token for user:', req.user._id);
-      // Generate JWT token
-      const token = generateToken(req.user._id);
-
-      if (!token) {
-        console.error('❌ Failed to generate JWT token');
-        return res.status(500).json({ error: 'Token generation failed' });
-      }
-
-      console.log('📦 Preparing user data for frontend');
-      // Redirect to frontend with token and user data
-      const userData = encodeURIComponent(JSON.stringify({
-        _id: req.user._id,
-        firstname: req.user.firstname || 'User',
-        lastname: req.user.lastname || '',
-        email: req.user.email,
-        phone: req.user.phone || '',
-        role: req.user.role || 'customer',
-        profilePicture: req.user.profilePicture || '',
-        authProvider: req.user.authProvider || 'google'
-      }));
-
-      const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/?token=${token}&user=${userData}&auth=success`;
-      console.log('🚀 Redirecting to frontend:', process.env.FRONTEND_URL || 'http://localhost:5173');
-      console.log('🔗 Full redirect URL:', redirectUrl);
-
-      res.redirect(redirectUrl);
-    } catch (error) {
-      console.error('❌ Google OAuth callback error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack,
-        user: req.user ? {
-          id: req.user._id,
-          email: req.user.email
-        } : 'No user'
-      });
-      res.status(500).json({
-        error: 'Callback processing failed',
-        message: error.message,
-        stack: error.stack
-      });
-    }
+    // Return simple JSON response to see if route works
+    res.json({
+      success: true,
+      message: 'Callback route reached successfully',
+      url: req.url,
+      query: req.query,
+      timestamp: new Date().toISOString()
+    });
   });
 
 } else {
