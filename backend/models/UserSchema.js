@@ -25,11 +25,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function (v) {
-        // Remove all non-digits and check if 10 digits remain
-        const cleaned = v.replace(/\D/g, '');
-        return cleaned.length >= 10 && cleaned.length <= 15;
+        return /^\d{10}$/.test(v);
       },
-      message: "Phone number must be 10-15 digits!",
+      message: "Phone number must be exactly 10 digits!",
     },
   },
   password: {
@@ -42,8 +40,7 @@ const userSchema = new mongoose.Schema({
   role:{
     type: String,
     required: true,
-    enum: ['user', 'customer', 'admin'],
-    default: "customer"
+    default: "user"
   },
   // Social Authentication fields
   googleId: {
