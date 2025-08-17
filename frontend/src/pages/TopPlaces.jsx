@@ -18,7 +18,6 @@ const TopPlaces = ({ theme }) => {
     };
     fetchRandomPlaces();
   }, []);
-
   return (
     <div className={`min-h-screen px-4 lg:ml-20 lg:px-6 py-6 lg:py-10 ${isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"}`}>
       <h1 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center lg:text-left">Top Places →</h1>
