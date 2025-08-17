@@ -76,21 +76,74 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     })
   );
 
-  // Simple callback route for debugging
-  router.get('/google/callback', (req, res) => {
-    console.log('🔄 SIMPLE Google OAuth callback route hit');
-    console.log('📍 Request URL:', req.url);
-    console.log('📍 Query params:', req.query);
+  router.get('/google/callback',
+    passport.authenticate('google', {
+      failureRedirect: `${process.env.FRONTEND_URL}/login?error=google_auth_failed`,
+      session: false // Disable sessions for debugging
+    }),
+    async (req, res) => {
+      try {
+        console.log('🔄 Google OAuth callback - User authenticated successfully');
+        console.log('👤 User object exists:', !!req.user);
 
-    // Return simple JSON response to see if route works
-    res.json({
-      success: true,
-      message: 'Callback route reached successfully',
-      url: req.url,
-      query: req.query,
-      timestamp: new Date().toISOString()
-    });
-  });
+        if (!req.user) {
+          console.error('❌ No user object after authentication');
+          return res.status(500).json({
+            error: 'Authentication succeeded but no user object found'
+          });
+        }
+
+        console.log('📧 User email:', req.user.email);
+        console.log('🆔 User ID:', req.user._id);
+
+        // Generate JWT token
+        console.log('🔑 Generating JWT token...');
+        const token = generateToken(req.user._id);
+
+        if (!token) {
+          console.error('❌ JWT token generation failed');
+          return res.status(500).json({ error: 'Token generation failed' });
+        }
+
+        console.log('✅ JWT token generated successfully');
+
+        // Prepare user data
+        const userData = {
+          _id: req.user._id,
+          firstname: req.user.firstname || 'User',
+          lastname: req.user.lastname || '',
+          email: req.user.email,
+          phone: req.user.phone || '',
+          role: req.user.role || 'customer',
+          profilePicture: req.user.profilePicture || '',
+          authProvider: req.user.authProvider || 'google'
+        };
+
+        console.log('📦 User data prepared:', userData);
+
+        // Encode user data for URL
+        const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+
+        // Create redirect URL
+        const redirectUrl = `${process.env.FRONTEND_URL}/?token=${token}&user=${encodedUserData}&auth=success`;
+
+        console.log('🚀 Redirecting to:', process.env.FRONTEND_URL);
+        console.log('🔗 Full redirect URL length:', redirectUrl.length);
+
+        res.redirect(redirectUrl);
+
+      } catch (error) {
+        console.error('❌ OAuth callback processing error:', error);
+        console.error('Error stack:', error.stack);
+
+        res.status(500).json({
+          error: 'OAuth callback processing failed',
+          message: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+      }
+    }
+  );
 
 } else {
   // Fallback routes when Google OAuth is not configured
