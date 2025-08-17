@@ -35,6 +35,9 @@ router.post("/check-email", async (req, res) => {
 // POST: Register User (OTP-Based Registration)
 router.post("/register", async (req, res) => {
   try {
+    console.log('🔄 Registration request received');
+    console.log('📦 Request body:', req.body);
+
     const { firstname, lastname, email, phone, password, role } = req.body;
     if (!firstname || !lastname || !email || !phone || !password || !role) {
       return res.status(400).json({ message: "All fields are required!" });
