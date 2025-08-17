@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/geocode", geocodeRouter);
-app.use("/api/users", router); 
+app.use("/api", router); 
 app.use("/api/places", placeRouter);  
 app.use("/api/v1/auth", authRouter); 
 
