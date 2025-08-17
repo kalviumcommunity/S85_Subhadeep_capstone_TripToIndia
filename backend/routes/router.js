@@ -66,17 +66,21 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Generate OTP
+    console.log('🔐 Generating OTP...');
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    console.log('✅ OTP generated:', otp);
 
     // Create new user (unverified until OTP verification)
+    console.log('👤 Creating new user...');
     const newUser = new User({
       firstname,
       lastname,
       email,
       phone,
       password: hashedPassword,
-      role: role || 'user',
+      role: role || 'customer',
+      authProvider: 'local',
       isEmailVerified: false, // Will be verified after OTP
       isOtpVerified: false,
       otp: otp,
@@ -84,10 +88,14 @@ router.post("/register", async (req, res) => {
       otpPurpose: 'signup'
     });
 
+    console.log('💾 Saving user to database...');
     await newUser.save();
+    console.log('✅ User saved successfully');
 
     // Send signup OTP email
+    console.log('📧 Sending OTP email...');
     const emailResult = await sendSignupOTP(email, otp, firstname);
+    console.log('📧 Email result:', emailResult);
 
     if (emailResult && emailResult.success) {
       res.status(201).json({
