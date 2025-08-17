@@ -66,21 +66,17 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Generate OTP
-    console.log('🔐 Generating OTP...');
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-    console.log('✅ OTP generated:', otp);
 
     // Create new user (unverified until OTP verification)
-    console.log('👤 Creating new user...');
     const newUser = new User({
       firstname,
       lastname,
       email,
       phone,
       password: hashedPassword,
-      role: role || 'customer',
-      authProvider: 'local',
+      role: role || 'user',
       isEmailVerified: false, // Will be verified after OTP
       isOtpVerified: false,
       otp: otp,
@@ -88,14 +84,10 @@ router.post("/register", async (req, res) => {
       otpPurpose: 'signup'
     });
 
-    console.log('💾 Saving user to database...');
     await newUser.save();
-    console.log('✅ User saved successfully');
 
     // Send signup OTP email
-    console.log('📧 Sending OTP email...');
     const emailResult = await sendSignupOTP(email, otp, firstname);
-    console.log('📧 Email result:', emailResult);
 
     if (emailResult && emailResult.success) {
       res.status(201).json({
@@ -113,19 +105,8 @@ router.post("/register", async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("❌ Registration error:", error);
-    console.error("Error details:", {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
-
-    // Return more specific error information
-    res.status(500).json({
-      success: false,
-      message: error.message || "Registration failed. Please try again.",
-      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    console.error("Registration error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 
