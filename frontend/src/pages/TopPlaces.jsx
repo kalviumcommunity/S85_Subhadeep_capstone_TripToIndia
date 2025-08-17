@@ -32,7 +32,7 @@ const TopPlaces = ({ theme }) => {
             <img
               src={place.imageUrl}
               alt={place.name}
-              className="w-full h-40 lg:h-48 object-cover rounded-md mb-4"
+              className="w-full h-auto object-cover rounded-md mb-4"
             />
             <h2 className="text-lg lg:text-xl font-semibold">{place.name}</h2>
           </div>
