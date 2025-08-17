@@ -113,8 +113,19 @@ router.post("/register", async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Registration error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("❌ Registration error:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+
+    // Return more specific error information
+    res.status(500).json({
+      success: false,
+      message: error.message || "Registration failed. Please try again.",
+      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 
