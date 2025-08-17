@@ -59,10 +59,10 @@ app.get("/", (req, res) => {
   res.send("HI WELCOME TO MY WEBSITE");
 });
 
-app.use("/api", geocodeRouter);
-app.use("/api", router);         // User routes
-app.use("/api/add", placeRouter); // Place routes
-app.use("/api/v1/auth", authRouter); // OAuth routes
+app.use("/api/geocode", geocodeRouter);
+app.use("/api/users", router); 
+app.use("/api/places", placeRouter);  
+app.use("/api/v1/auth", authRouter); 
 
 // Start server
 const PORT = process.env.PORT || 3000;
