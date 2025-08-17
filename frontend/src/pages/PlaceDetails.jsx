@@ -21,7 +21,7 @@ const PlaceDetails = ({ theme }) => {
     const fetchPlace = async () => {
       try {
         const res = await axios.get(
-          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/places/${id}`
+          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/places/${id}`
         );
         setPlace(res.data);
       } catch (err) {
