@@ -55,7 +55,7 @@ const PlaceDetails = ({ theme }) => {
             // Use Geocoding API to convert address to lat/lng
             try {
               const geoRes = await fetch(
-                `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/geocode?address=${encodeURIComponent(
+                `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/geocode/geocode?address=${encodeURIComponent(
                   place.address
                 )}`
               );
