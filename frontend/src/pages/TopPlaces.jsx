@@ -22,31 +22,37 @@ const TopPlaces = ({ theme }) => {
   }, []);
 
   return (
-    <div className={`min-h-screen ml-20 px-6 py-10}`}>
+    <div className={`min-h-screen ml-20 px-6 py-10`}>
       <h1 className="text-3xl font-bold mb-8">Top Places →</h1>
-      <div
-        className={`grid grid-cols-1 ml-16 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}
-      >
+
+      {/* Places Grid */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`}>
         {places.map((place) => (
           <div
             key={place._id}
             onClick={() => navigate(`/place/${place._id}`)}
-            className={`cursor-pointer rounded-lg border shadow-lg p-4 hover:shadow-xl transition ${
-              isDark ? "bg-[#222] text-white" : "bg-[white] text-black"
-            } hover:shadow-blue-200`}
+            className={`cursor-pointer w-64 h-80 rounded-lg border shadow-lg p-4 
+              flex flex-col items-center hover:shadow-xl transition 
+              ${isDark ? "bg-[#222] text-white" : "bg-white text-black"} hover:shadow-blue-200`}
           >
+            {/* Image */}
             <img
               src={place.imageUrl}
               alt={place.name}
-              className="w-full h-48 object-cover rounded-md mb-4"
+              className="w-full h-40 object-cover rounded-md mb-4"
             />
-            <h2 className="text-xl font-semibold">{place.name}</h2>
+
+            {/* Title */}
+            <h2 className="text-lg font-semibold text-center truncate">
+              {place.name}
+            </h2>
           </div>
         ))}
       </div>
+
       {/* About TripToIndia Section */}
       <div
-        className={`mt-8 px-6 ml-16  py-10 rounded-2xl shadow-inner transition-all duration-500 ${
+        className={`mt-8 px-6 py-10 rounded-2xl shadow-inner transition-all duration-500 ${
           isDark ? "bg-[#111] text-gray-300" : "bg-white text-gray-800"
         }`}
       >
@@ -54,10 +60,10 @@ const TopPlaces = ({ theme }) => {
           Why TripToIndia?
         </h2>
         <p className="text-center text-lg leading-relaxed max-w-4xl mx-auto">
-          At <span className="font-semibold text-blue-500">TripToIndia</span>,
-          we believe that every journey is more than a destination—it's a story.
-          Our mission is to connect explorers with the heart and soul of India's
-          most beautiful and hidden gems. 🌄
+          At <span className="font-semibold text-blue-500">TripToIndia</span>, we
+          believe that every journey is more than a destination—it's a story. Our
+          mission is to connect explorers with the heart and soul of India's most
+          beautiful and hidden gems. 🌄
         </p>
         <p className="text-center text-md leading-relaxed mt-4 max-w-3xl mx-auto italic">
           From the snowy peaks of the Himalayas to the calm shores of the Indian
