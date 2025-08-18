@@ -25,17 +25,19 @@ const TopPlaces = ({ theme }) => {
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:ml-16 gap-4 lg:gap-6`}>
         {places.map((place) => (
           <div
-            key={place._id}
-            onClick={() => navigate(`/place/${place._id}`)}
-            className={`cursor-pointer rounded-lg border shadow-lg p-4 hover:shadow-xl transition ${isDark ? "bg-[#222] text-white" : "bg-[white] text-black"} hover:shadow-blue-200`}
-          >
-            <img
-              src={place.imageUrl}
-              alt={place.name}
-              className="w-full h-40 lg:h-48 object-cover rounded-md mb-4"
-            />
-            <h2 className="text-lg lg:text-xl font-semibold">{place.name}</h2>
-          </div>
+  key={place._id}
+  onClick={() => navigate(`/place/${place._id}`)}
+  className={`cursor-pointer rounded-lg border shadow-lg p-4 flex flex-col justify-between h-80 hover:shadow-xl transition ${
+    isDark ? "bg-[#222] text-white" : "bg-[white] text-black"
+  } hover:shadow-blue-200`}
+>
+  <img
+    src={place.imageUrl}
+    alt={place.name}
+    className="w-full h-48 object-cover rounded-md mb-4"
+  />
+  <h2 className="text-lg lg:text-xl font-semibold text-center truncate">{place.name}</h2>
+</div>
         ))}
       </div>
       {/* About TripToIndia Section */}
