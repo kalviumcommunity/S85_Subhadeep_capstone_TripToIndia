@@ -37,18 +37,21 @@ const TopPlaces = ({ theme }) => {
           <div
             key={place._id}
             onClick={() => navigate(`/place/${place._id}`)}
-            className={`cursor-pointer rounded-lg border shadow-lg p-4 flex flex-col justify-between h-56 hover:shadow-xl transition ${
-              isDark ? "bg-[#222] text-white" : "bg-[white] text-black"
-            } hover:shadow-blue-200`}
+            className={`cursor-pointer rounded-lg border shadow-lg flex flex-col overflow-hidden transition-all duration-300 ${
+              isDark ? "bg-[#2b2b2b] border-gray-700" : "bg-white border-gray-300"
+            } hover:shadow-xl hover:-translate-y-1 hover:shadow-blue-200`}
           >
             <img
               src={place.imageUrl}
               alt={place.name}
-              className="w-full h-28 object-cover rounded-md mb-4"
+              className="w-full object-cover aspect-video" // <-- Image is now responsive
             />
-            <h2 className="text-lg lg:text-xl font-semibold text-center truncate">
-              {place.name}
-            </h2>
+            {/* Text container with padding */}
+            <div className="p-4">
+              <h2 className="text-lg lg:text-xl font-semibold text-center">
+                {place.name} {/* <-- Text will now wrap */}
+              </h2>
+            </div>
           </div>
         ))}
       </div>
