@@ -67,7 +67,7 @@ const FeedBack = ({ theme }) => {
       }
       try {
         const res = await axios.get(
-          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/search?q=${searchTerm}`
+          `https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/places/search?q=${searchTerm}`
         );
         setSearchResults(res.data);
         setShowDropdown(res.data.length > 0);
