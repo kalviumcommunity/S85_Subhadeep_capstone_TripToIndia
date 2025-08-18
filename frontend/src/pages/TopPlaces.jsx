@@ -28,29 +28,29 @@ const TopPlaces = ({ theme }) => {
       {/* Places Grid */}
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`}>
         {places.map((place) => (
-         <div
-  key={place._id}
-  onClick={() => navigate(`/place/${place._id}`)}
-  className={`cursor-pointer w-64 h-80 rounded-lg border shadow-lg 
-    flex flex-col hover:shadow-xl transition 
-    ${isDark ? "bg-[#222] text-white" : "bg-white text-black"} hover:shadow-blue-200`}
->
-  {/* Image area */}
-  <div className="w-full h-2/3">
-    <img
-      src={place.imageUrl}
-      alt={place.name}
-      className="w-full h-full object-cover rounded-t-lg"
-    />
-  </div>
+          <div
+            key={place._id}
+            onClick={() => navigate(`/place/${place._id}`)}
+            className={`cursor-pointer w-64 h-80 rounded-lg border shadow-lg p-4 
+              flex flex-col items-center hover:shadow-xl transition 
+              ${
+                isDark ? "bg-[#222] text-white" : "bg-white text-black"
+              } hover:shadow-blue-200`}
+          >
+            {/* Image */}
+            <div className="w-full h-2/3">
+              <img
+                src={place.imageUrl}
+                alt={place.name}
+                className="w-full h-full object-cover rounded-t-lg"
+              />
+            </div>
 
-  {/* Text area */}
-  <div className="flex-1 flex items-center justify-center px-2">
-    <h2 className="text-lg font-semibold text-center line-clamp-2">
-      {place.name}
-    </h2>
-  </div>
-</div>
+            {/* Title */}
+            <h2 className="text-lg font-semibold text-center truncate">
+              {place.name}
+            </h2>
+          </div>
         ))}
       </div>
 
@@ -64,10 +64,10 @@ const TopPlaces = ({ theme }) => {
           Why TripToIndia?
         </h2>
         <p className="text-center text-lg leading-relaxed max-w-4xl mx-auto">
-          At <span className="font-semibold text-blue-500">TripToIndia</span>, we
-          believe that every journey is more than a destination—it's a story. Our
-          mission is to connect explorers with the heart and soul of India's most
-          beautiful and hidden gems. 🌄
+          At <span className="font-semibold text-blue-500">TripToIndia</span>,
+          we believe that every journey is more than a destination—it's a story.
+          Our mission is to connect explorers with the heart and soul of India's
+          most beautiful and hidden gems. 🌄
         </p>
         <p className="text-center text-md leading-relaxed mt-4 max-w-3xl mx-auto italic">
           From the snowy peaks of the Himalayas to the calm shores of the Indian
