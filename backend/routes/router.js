@@ -38,8 +38,8 @@ router.post("/register", async (req, res) => {
     console.log('🔄 Registration request received');
     console.log('📦 Request body:', req.body);
 
-    const { firstname, lastname, email, password, role } = req.body;
-    if (!firstname || !lastname || !email || !password || !role) {
+    const { firstname, lastname, email, phone, password, role } = req.body;
+    if (!firstname || !lastname || !email || !phone || !password || !role) {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
@@ -74,6 +74,7 @@ router.post("/register", async (req, res) => {
       firstname,
       lastname,
       email,
+      phone,
       password: hashedPassword,
       role: role || 'user',
       isEmailVerified: false, // Will be verified after OTP
@@ -160,6 +161,7 @@ router.post("/verify-signup-otp", async (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
+        phone: user.phone,
         role: user.role,
         authProvider: user.authProvider,
         isEmailVerified: user.isEmailVerified
@@ -276,6 +278,7 @@ router.post("/verify-login-otp", async (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
+        phone: user.phone,
         role: user.role,
         authProvider: user.authProvider,
         profilePicture: user.profilePicture,

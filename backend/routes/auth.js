@@ -11,7 +11,7 @@ router.get('/test', (req, res) => {
     message: 'Auth routes are working!',
     googleConfigured: !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
     callbackURL: process.env.NODE_ENV === 'production'
-      ? "http://localhost:3000/api/v1/auth/google/callback"
+      ? "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/v1/auth/google/callback"
       : "http://localhost:3000/api/v1/auth/google/callback",
     currentURL: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
     environment: process.env.NODE_ENV,
@@ -113,6 +113,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           firstname: req.user.firstname || 'User',
           lastname: req.user.lastname || '',
           email: req.user.email,
+          phone: req.user.phone || '',
           role: req.user.role || 'customer',
           profilePicture: req.user.profilePicture || '',
           authProvider: req.user.authProvider || 'google'
@@ -190,6 +191,7 @@ router.get('/me', async (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
+        phone: user.phone,
         role: user.role,
         profilePicture: user.profilePicture,
         authProvider: user.authProvider,
