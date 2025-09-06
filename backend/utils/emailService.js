@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 // Create email transporter
 const createTransporter = () => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'Trip@118') {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'oxngxeaiitwjqbot') {
     return null; // Return null instead of throwing error
   }
 
@@ -19,7 +19,7 @@ const createTransporter = () => {
 export const sendPasswordResetEmail = async (email, resetToken, userName) => {
   try {
     // Check if email is properly configured
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'Trip@118') {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'oxngxeaiitwjqbot') {
       // Mock email service for development
       console.log('📧 MOCK EMAIL SERVICE - Password Reset');
       console.log('To:', email);
@@ -119,7 +119,7 @@ export const sendPasswordResetEmail = async (email, resetToken, userName) => {
 export const sendPasswordResetConfirmation = async (email, userName) => {
   try {
     // Check if email is properly configured
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'Trip@118') {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'oxngxeaiitwjqbot') {
       // Mock email service for development
       console.log('📧 MOCK EMAIL SERVICE - Password Reset Confirmation');
       console.log('To:', email);
