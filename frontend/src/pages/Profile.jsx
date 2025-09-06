@@ -94,14 +94,6 @@ const Profile = ({ theme }) => {
                             <p className="font-semibold text-base lg:text-lg break-all">{user.email}</p>
                         </div>
                     </div>
-                    {/* Phone */}
-                    <div className="flex items-center gap-4">
-                        <IoCallOutline size={22} className={isDark ? 'text-purple-300' : 'text-blue-600'} />
-                        <div className={isDark ? 'text-white/90' : 'text-gray-700'}>
-                            <span className="text-xs lg:text-sm opacity-70">Phone Number</span>
-                            <p className="font-semibold text-base lg:text-lg">{user.phone}</p>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Logout Button */}
