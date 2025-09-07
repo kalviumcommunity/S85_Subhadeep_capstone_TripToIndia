@@ -22,37 +22,44 @@ const TopPlaces = ({ theme }) => {
   }, []);
 
   return (
-    <div className={`min-h-screen ml-20 px-6 py-10`}>
-      <h1 className="text-3xl font-bold mb-8">Top Places →</h1>
+    // CHANGED: Made margin and padding responsive. 
+    // 'ml-0 lg:ml-20' removes the margin on mobile.
+    // 'px-4 sm:px-6' adjusts padding for different screen sizes.
+    <div className={`min-h-screen ml-0 lg:ml-20 px-4 sm:px-6 py-10`}>
+      {/* CHANGED: Centered the heading on mobile for better balance. */}
+      <h1 className="text-3xl font-bold mb-8 text-center sm:text-left">Top Places →</h1>
+      
+      {/* CHANGED: Removed fixed 'ml-16'. The grid now fills the container correctly. */}
       <div
-        className={`grid grid-cols-1 ml-16 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}
+        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}
       >
         {places.map((place) => (
-<div
-  key={place._id}
-  onClick={() => navigate(`/place/${place._id}`)}
-  className={`cursor-pointer rounded-lg border shadow-lg p-4 flex flex-col h-full hover:shadow-xl transition ${
-    isDark ? "bg-[#222] text-white" : "bg-white text-black"
-  } hover:shadow-blue-200`}
->
-  {/* Image container with fixed aspect ratio */}
-  <div className="relative w-full aspect-video overflow-hidden rounded-md mb-4">
-    <img
-      src={place.imageUrl}
-      alt={place.name}
-      className="absolute top-0 left-0 w-full h-full object-cover hover:scale-105"
-    />
-  </div>
-  
-  {/* Place name - centered below the image */}
-<h2 className="text-xl font-semibold">{place.name}</h2>
-</div>
-
+          <div
+            key={place._id}
+            onClick={() => navigate(`/place/${place._id}`)}
+            className={`cursor-pointer rounded-lg border shadow-lg p-4 flex flex-col h-full hover:shadow-xl transition ${
+              isDark ? "bg-[#222] text-white" : "bg-white text-black"
+            } hover:shadow-blue-200`}
+          >
+            {/* Image container with fixed aspect ratio */}
+            <div className="relative w-full aspect-video overflow-hidden rounded-md mb-4">
+              <img
+                src={place.imageUrl}
+                alt={place.name}
+                className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+            
+            {/* Place name - centered below the image */}
+            <h2 className="text-xl font-semibold">{place.name}</h2>
+          </div>
         ))}
       </div>
+
       {/* About TripToIndia Section */}
+      {/* CHANGED: Removed fixed 'ml-16' and adjusted padding for mobile. */}
       <div
-        className={`mt-8 px-6 ml-16  py-10 rounded-2xl shadow-inner transition-all duration-500 ${
+        className={`mt-12 p-6 sm:px-6 py-10 rounded-2xl shadow-inner transition-all duration-500 ${
           isDark ? "bg-[#111] text-gray-300" : "bg-white text-gray-800"
         }`}
       >
