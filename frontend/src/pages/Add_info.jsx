@@ -28,7 +28,7 @@ const Add_info = ({ theme }) => {
     e.preventDefault();
     try {
       await axios.post(
-        "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/add/register",
+        "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/places/register",
         formData
       );
       setMessage("✅ Place added successfully!");
