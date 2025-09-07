@@ -98,7 +98,7 @@ const Home = ({ theme }) => {
   return (
     <>
       <div
-        className={`transition-all ml-20 duration-500 ${
+        className={`transition-all duration-500 ${
           isDark ? "bg-[#222] text-white" : "bg-[#ced8ff] text-black"
         }`}
       >
