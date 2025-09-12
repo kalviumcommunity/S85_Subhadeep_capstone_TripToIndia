@@ -10,6 +10,9 @@ import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loginSuccess } from "../redux/user/userSlice";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
 const Home = ({ theme }) => {
   const isDark = theme === "dark";
   const user = useSelector((state) => state.user.currentUser);
@@ -23,30 +26,38 @@ const Home = ({ theme }) => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const userData = urlParams.get('user');
-    const authStatus = urlParams.get('auth');
+    const token = urlParams.get("token");
+    const userData = urlParams.get("user");
+    const authStatus = urlParams.get("auth");
 
-    if (token && userData && authStatus === 'success') {
+    if (token && userData && authStatus === "success") {
       try {
         // Store token in localStorage
-        localStorage.setItem('token', token);
+        localStorage.setItem("token", token);
 
         // Parse user data and update Redux store
         const user = JSON.parse(decodeURIComponent(userData));
         dispatch(loginSuccess(user));
 
         // Clean up URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
 
         // Show success message
-        alert(`Welcome ${user.firstname}! You have successfully logged in with ${user.authProvider}.`);
+        alert(
+          `Welcome ${user.firstname}! You have successfully logged in with ${user.authProvider}.`
+        );
       } catch (error) {
-        console.error('Error processing OAuth callback:', error);
-        alert('Authentication successful, but there was an error processing your login. Please try again.');
+        console.error("Error processing OAuth callback:", error);
+        alert(
+          "Authentication successful, but there was an error processing your login. Please try again."
+        );
       }
-    } else if (urlParams.get('error')) {
-      const error = urlParams.get('error');
+    } else if (urlParams.get("error")) {
+      const error = urlParams.get("error");
       alert(`Authentication failed: ${error}. Please try again.`);
       // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -84,13 +95,14 @@ const Home = ({ theme }) => {
   const scrollToPosition = (direction) => {
     if (galleryRef.current) {
       const scrollAmount = galleryRef.current.clientWidth * 0.8;
-      const newScrollLeft = direction === 'left'
-        ? galleryRef.current.scrollLeft - scrollAmount
-        : galleryRef.current.scrollLeft + scrollAmount;
+      const newScrollLeft =
+        direction === "left"
+          ? galleryRef.current.scrollLeft - scrollAmount
+          : galleryRef.current.scrollLeft + scrollAmount;
 
       galleryRef.current.scrollTo({
         left: newScrollLeft,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -208,7 +220,7 @@ const Home = ({ theme }) => {
                     src={heroImg}
                     alt=""
                     className="rounded-2xl border border-orange-500 object-cover transition-transform duration-300 hover:scale-105"
-                    style={{ width: '200px', height: '350px' }}
+                    style={{ width: "200px", height: "350px" }}
                   />
                 </div>
               </div>
@@ -229,7 +241,7 @@ const Home = ({ theme }) => {
                     src={heroImg02}
                     alt=""
                     className="transition-transform duration-300 hover:scale-105 rounded-2xl border border-orange-500 object-cover"
-                    style={{ width: '200px', height: '350px' }}
+                    style={{ width: "200px", height: "350px" }}
                   />
                 </div>
               </div>
@@ -255,7 +267,7 @@ const Home = ({ theme }) => {
                     src={heroVideo}
                     controls
                     className="w-full h-48 rounded-2xl border border-pink-500 object-cover object-center transition-transform duration-300 hover:scale-105"
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: "cover" }}
                   />
                 </div>
                 <div className="flex-shrink-0 w-64">
@@ -271,37 +283,65 @@ const Home = ({ theme }) => {
               <div className="flex items-center justify-center mt-4 mb-2">
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => scrollToPosition('left')}
+                    onClick={() => scrollToPosition("left")}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
                       isDark
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                        ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-600"
                     }`}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
                     </svg>
                   </button>
 
-                  <div className={`relative w-32 h-2 rounded-full ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                  <div
+                    className={`relative w-32 h-2 rounded-full ${
+                      isDark ? "bg-gray-700" : "bg-gray-300"
+                    }`}
+                  >
                     <div
                       className={`absolute left-0 top-0 h-full rounded-full transition-all duration-300 ${
-                        isDark ? 'bg-gradient-to-r from-purple-500 to-blue-500' : 'bg-gradient-to-r from-orange-500 to-green-500'
+                        isDark
+                          ? "bg-gradient-to-r from-purple-500 to-blue-500"
+                          : "bg-gradient-to-r from-orange-500 to-green-500"
                       }`}
-                      style={{ width: `${Math.max(scrollProgress * 100, 10)}%` }}
+                      style={{
+                        width: `${Math.max(scrollProgress * 100, 10)}%`,
+                      }}
                     ></div>
                   </div>
 
                   <button
-                    onClick={() => scrollToPosition('right')}
+                    onClick={() => scrollToPosition("right")}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
                       isDark
-                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                        ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-600"
                     }`}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -309,7 +349,11 @@ const Home = ({ theme }) => {
 
               {/* Scroll Hint Text */}
               <div className="text-center">
-                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} italic`}>
+                <p
+                  className={`text-xs ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  } italic`}
+                >
                   ← Swipe to explore more →
                 </p>
               </div>
@@ -455,38 +499,82 @@ const Home = ({ theme }) => {
         <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
           {/* Compact Footer Content */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-
             {/* Brand and Description */}
             <div className="text-center md:text-left">
               <h3 className="text-xl font-bold text-white mb-2">TripToIndia</h3>
               <p className="text-gray-300 text-sm max-w-md">
-                Discover incredible destinations and make memories that last a lifetime.
+                Discover incredible destinations and make memories that last a
+                lifetime.
               </p>
             </div>
 
             {/* Quick Links */}
             <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <a href="/" className="text-gray-300 hover:text-white transition-colors duration-300">Home</a>
-              <a href="/about" className="text-gray-300 hover:text-white transition-colors duration-300">About</a>
-              <a href="/top-places" className="text-gray-300 hover:text-white transition-colors duration-300">Top Places</a>
-              <a href="/contact" className="text-gray-300 hover:text-white transition-colors duration-300">Contact</a>
+              <a
+                href="/"
+                className="text-gray-300 hover:text-white transition-colors duration-300"
+              >
+                Home
+              </a>
+              <a
+                href="/about"
+                className="text-gray-300 hover:text-white transition-colors duration-300"
+              >
+                About
+              </a>
+              <a
+                href="/top-places"
+                className="text-gray-300 hover:text-white transition-colors duration-300"
+              >
+                Top Places
+              </a>
+              <a
+                href="/contact"
+                className="text-gray-300 hover:text-white transition-colors duration-300"
+              >
+                Contact
+              </a>
             </div>
 
             {/* Contact Info */}
             <div className="text-center md:text-right text-sm text-gray-300">
-              <p>📞 +91 7001293796</p>
-              <p>✉️ subhadeepsamanta1535@gmail.com</p>
+              <a
+                href="https://github.com/Subhadeep-Samanta"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 hover:underline justify-center md:justify-end"
+              >
+                <FaGithub className="text-lg" /> github.com/Subhadeep-Samanta
+              </a>
+
+              <a
+                href="mailto:subhadeepsamanta1535@gmail.com"
+                className="flex items-center gap-1 hover:underline justify-center md:justify-end"
+              >
+                <MdEmail className="text-lg" /> subhadeepsamanta1535@gmail.com
+              </a>
+
+              <a
+                href="https://linkedin.com/in/your-profile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 hover:underline justify-center md:justify-end"
+              >
+                <FaLinkedin className="text-blue-500 text-lg" />{" "}
+                linkedin.com/in/your-profile
+              </a>
             </div>
           </div>
 
           {/* Bottom Copyright */}
           <div className="mt-6 pt-4 border-t border-gray-700 text-center">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} TripToIndia. All rights reserved. Made with ❤️ in India
+              © {new Date().getFullYear()} TripToIndia. All rights reserved.
+              Made with ❤️ in India
             </p>
           </div>
         </div>
-        </footer>
+      </footer>
     </>
   );
 };
