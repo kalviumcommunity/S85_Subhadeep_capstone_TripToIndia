@@ -529,7 +529,7 @@ const Home = ({ theme }) => {
                 Top Places
               </a>
               <a
-                href="/contact"
+                href="https://www.linkedin.com/in/subhadeep-samanta-550762254/"
                 className="text-gray-300 hover:text-white transition-colors duration-300"
               >
                 Contact
@@ -537,31 +537,28 @@ const Home = ({ theme }) => {
             </div>
 
             {/* Contact Info */}
-            <div className="text-center md:text-right text-sm text-gray-300">
+            <div className="text-center md:text-right space-y-3 text-sm text-gray-300">
               <a
                 href="https://github.com/Subhadeep-Samanta"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:underline justify-center md:justify-end"
               >
-                <FaGithub className="text-lg" /> github.com/Subhadeep-Samanta
+                <FaGithub className="text-lg" /> github.com
               </a>
 
+            <p>
+              ✉️ subhadeepsamanta1535@gmail.com
+              </p>
+             
               <a
-                href="mailto:subhadeepsamanta1535@gmail.com"
-                className="flex items-center gap-1 hover:underline justify-center md:justify-end"
-              >
-                <MdEmail className="text-lg" /> subhadeepsamanta1535@gmail.com
-              </a>
-
-              <a
-                href="https://linkedin.com/in/your-profile"
+                href="https://www.linkedin.com/in/subhadeep-samanta-550762254/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:underline justify-center md:justify-end"
               >
                 <FaLinkedin className="text-blue-500 text-lg" />{" "}
-                linkedin.com/in/your-profile
+                linkedin.com
               </a>
             </div>
           </div>
