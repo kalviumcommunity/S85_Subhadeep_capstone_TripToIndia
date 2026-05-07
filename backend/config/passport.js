@@ -63,12 +63,20 @@ const configureGoogleOAuth = () => {
       }
 
       // Check for email collision with local account
-      const existingEmailUser = await User.findOne({ email });
-      if (existingEmailUser) {
-        const error = new Error('Email already registered with local account');
-        error.name = 'AccountConflictError';
-        throw error;
-      }
+    const existingEmailUser = await User.findOne({ email });
+
+if (existingEmailUser) {
+  existingEmailUser.googleId = googleId;
+  existingEmailUser.authProvider = 'google';
+
+  if (profile.photos?.[0]?.value) {
+    existingEmailUser.profilePicture = profile.photos[0].value;
+  }
+
+  await existingEmailUser.save();
+
+  return done(null, existingEmailUser);
+}
 
       // Create new user
       const newUser = new User({
