@@ -1,0 +1,95 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const TopPlaces = ({ theme }) => {
+  const [places, setPlaces] = useState([]);
+  const isDark = theme === "dark";
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRandomPlaces = async () => {
+      try {
+        const res = await axios.get(
+          "https://s85-subhadeep-capstone-triptoindia-18.onrender.com/api/places/random"
+        );
+        setPlaces(res.data);
+      } catch (err) {
+        console.error("Error fetching random places", err);
+      }
+    };
+    fetchRandomPlaces();
+  }, []);
+
+  return (
+    // CHANGED: Made margin and padding responsive. 
+    // 'ml-0 lg:ml-20' removes the margin on mobile.
+    // 'px-4 sm:px-6' adjusts padding for different screen sizes.
+    <div className={`min-h-screen ml-0 lg:ml-20 px-4 sm:px-6 py-10`}>
+      {/* CHANGED: Centered the heading on mobile for better balance. */}
+      <h1 className="text-3xl font-bold mb-8 text-center sm:text-left">Top Places →</h1>
+      
+      {/* CHANGED: Removed fixed 'ml-16'. The grid now fills the container correctly. */}
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 `}
+      >
+        {places.map((place) => (
+          <div
+            key={place._id}
+            onClick={() => navigate(`/place/${place._id}`)}
+            className={`cursor-pointer rounded-lg border shadow-lg p-4 flex flex-col h-full hover:shadow-xl transition ${
+              isDark ? "bg-[#222] text-white" : "bg-white text-black"
+            } hover:shadow-blue-200`}
+          >
+            {/* Image container with fixed aspect ratio */}
+            <div className="relative w-full aspect-video overflow-hidden rounded-md mb-4">
+              <img
+                src={place.imageUrl}
+                alt={place.name}
+                className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+            
+            {/* Place name - centered below the image */}
+            <h2 className="text-xl font-semibold">{place.name}</h2>
+          </div>
+        ))}
+      </div>
+
+      {/* About TripToIndia Section */}
+      {/* CHANGED: Removed fixed 'ml-16' and adjusted padding for mobile. */}
+      <div
+        className={`mt-12 p-6 sm:px-6 py-10 rounded-2xl shadow-inner transition-all duration-500 ${
+          isDark ? "bg-[#111] text-gray-300" : "bg-white text-gray-800"
+        }`}
+      >
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-pink-500">
+          Why TripToIndia?
+        </h2>
+        <p className="text-center text-lg leading-relaxed max-w-4xl mx-auto">
+          At <span className="font-semibold text-blue-500">TripToIndia</span>,
+          we believe that every journey is more than a destination—it's a story.
+          Our mission is to connect explorers with the heart and soul of India's
+          most beautiful and hidden gems. 🌄
+        </p>
+        <p className="text-center text-md leading-relaxed mt-4 max-w-3xl mx-auto italic">
+          From the snowy peaks of the Himalayas to the calm shores of the Indian
+          Ocean, we help you discover, share, and relive moments that matter. ✨
+        </p>
+        <div className="mt-6 text-center">
+          <span className="text-sm text-gray-500">
+            ✈️ Plan. Explore. Share. — Only with
+            <a
+              href="/"
+              className="hover:text-pink-500 font-medium text-blue-600 transition"
+            >
+              <span> TripToIndia</span>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TopPlaces;
