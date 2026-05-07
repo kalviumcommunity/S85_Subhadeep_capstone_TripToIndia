@@ -35,16 +35,22 @@ router.post("/check-email", async (req, res) => {
 // POST: Register User (OTP-Based Registration)
 router.post("/register", async (req, res) => {
   try {
-    console.log('🔄 Registration request received');
-    console.log('📦 Request body:', req.body);
+    console.log("🔄 Registration request received");
+    console.log("📦 Request body:", req.body);
 
-    const { firstname, lastname, email, password, role } = req.body;
+    const { firstname, lastname, email, phone, password, role } = req.body;
+
+    // Validate fields
     if (!firstname || !lastname || !email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required!" });
+      return res.status(400).json({
+        success: false,
+        message: "All required fields are required!"
+      });
     }
 
-    // Check if user already exists
+    // Check existing user
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       return res.status(409).json({
         success: false,
@@ -52,12 +58,15 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // Validate password
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+    // Password validation
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         success: false,
-        message: "Password must be 6+ chars with uppercase, lowercase, number, and special character."
+        message:
+          "Password must contain uppercase, lowercase, number and special character."
       });
     }
 
@@ -67,48 +76,66 @@ router.post("/register", async (req, res) => {
 
     // Generate OTP
     const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Create new user (unverified until OTP verification)
+    console.log("🔐 GENERATED OTP:", otp);
+
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+    // Create unverified user
     const newUser = new User({
       firstname,
       lastname,
       email,
+      phone: phone || "",
       password: hashedPassword,
-      role: role || 'user',
-      isEmailVerified: false, // Will be verified after OTP
-      isOtpVerified: false,
-      otp: otp,
-      otpExpires: otpExpires,
-      otpPurpose: 'signup'
+      role: role || "user",
+
+      otp,
+      otpExpires,
+      otpPurpose: "signup",
+
+      isEmailVerified: false,
+      isOtpVerified: false
     });
 
     await newUser.save();
 
-    // Send signup OTP email
-    const emailResult = await sendSignupOTP(email, otp, firstname);
+    console.log("💾 USER SAVED");
 
-    if (emailResult && emailResult.success) {
-      res.status(201).json({
-        success: true,
-        requiresOTP: true,
-        userId: newUser._id,
-        message: "Registration initiated! Please check your email for verification code."
-      });
-    } else {
-      // If email fails, delete the user and return error
-      await User.findByIdAndDelete(newUser._id);
-      res.status(500).json({
+    // Send OTP email
+    console.log("📧 SENDING OTP EMAIL");
+
+    const emailResult = await sendSignupOTP(
+      email,
+      otp,
+      firstname
+    );
+
+    console.log("📨 EMAIL RESULT:", emailResult);
+
+    if (!emailResult.success) {
+      return res.status(500).json({
         success: false,
         message: "Failed to send verification email. Please try again."
       });
     }
+
+    res.status(201).json({
+      success: true,
+      requiresOTP: true,
+      message: "Verification code sent to your email",
+      email
+    });
+
   } catch (error) {
-    console.error("Registration error:", error);
-    res.status(500).json({ success: false, message: error.message });
+    console.error("❌ Registration error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 });
-
 // POST: Verify Signup OTP
 router.post("/verify-signup-otp", async (req, res) => {
   try {
