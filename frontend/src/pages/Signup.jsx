@@ -26,7 +26,7 @@ const Signup = ({ theme }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailChecking, setEmailChecking] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
-
+  const [isSuccess, setIsSuccess] = useState(false);
   // Ensure clean state on component mount (fixes mobile issues)
   useEffect(() => {
     setLoading(false);
