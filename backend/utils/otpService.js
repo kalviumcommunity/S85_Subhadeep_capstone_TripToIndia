@@ -42,7 +42,7 @@ export const sendLoginOTP = async (email, otp, userName) => {
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: '"TripToIndia" <triptoindia118@gmail.com>',
       to: email,
       subject: 'Login Verification Code - TripToIndia',
       html: `
@@ -95,7 +95,7 @@ console.log("✅ SIGNUP OTP EMAIL SENT");
 export const sendSignupOTP = async (email, otp, userName) => {
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: '"TripToIndia" <triptoindia118@gmail.com>',
       to: email,
       subject: 'Email Verification Code - TripToIndia',
       html: `
@@ -145,7 +145,7 @@ export const sendSignupOTP = async (email, otp, userName) => {
 export const sendWelcomeEmail = async (email, userName) => {
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: '"TripToIndia" <triptoindia118@gmail.com>',
       to: email,
       subject: 'Welcome to TripToIndia!',
       html: `
