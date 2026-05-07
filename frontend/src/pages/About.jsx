@@ -5,6 +5,7 @@ const About = ({ theme }) => {
   const isDark = theme === "dark";
 const navigate = useNavigate(); 
 
+
   const handleStartJourney = () => {
     navigate("/"); 
   };
