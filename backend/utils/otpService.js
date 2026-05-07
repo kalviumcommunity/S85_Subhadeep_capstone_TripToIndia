@@ -68,7 +68,11 @@ export const sendLoginOTP = async (email, otp, userName) => {
       `
     };
 
-    await transporter.sendMail(mailOptions);
+    console.log("🚀 STARTING SIGNUP OTP EMAIL");
+
+await transporter.sendMail(mailOptions);
+
+console.log("✅ SIGNUP OTP EMAIL SENT");
 
     return {
       success: true,
