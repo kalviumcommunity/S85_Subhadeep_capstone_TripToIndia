@@ -5,7 +5,7 @@ const About = ({ theme }) => {
   const isDark = theme === "dark";
 const navigate = useNavigate(); 
 
-
+// working on continue with google
   const handleStartJourney = () => {
     navigate("/"); 
   };
