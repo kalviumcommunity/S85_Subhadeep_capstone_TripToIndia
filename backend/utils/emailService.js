@@ -52,7 +52,7 @@ export const sendPasswordResetEmail = async (email, resetToken, userName) => {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: '"TripToIndia" <triptoindia118@gmail.com>',
       to: email,
       subject: 'Password Reset Request - TripToIndia',
       html: `
@@ -148,7 +148,7 @@ export const sendPasswordResetConfirmation = async (email, userName) => {
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: '"TripToIndia" <triptoindia118@gmail.com>',
       to: email,
       subject: 'Password Reset Successful - TripToIndia',
       html: `
