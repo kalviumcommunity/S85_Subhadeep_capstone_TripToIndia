@@ -7,12 +7,14 @@ const createTransporter = () => {
   }
 
   return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
+  host: "smtp-relay.brevo.com",
+  port: 2525,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 };
 
 // Send password reset email
